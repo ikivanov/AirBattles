@@ -14,12 +14,12 @@
 
  	<script type="text/javascript">
 		window.onload = function() {
-			require(["framework/utils", "air-battles", "framework/image-manager"], function(Utils, SpaceInvaders, ImageManager) {
+			require(["framework/utils", "air-battles", "framework/image-manager"], function(Utils, AirBattles, ImageManager) {
 				let canvas = document.getElementById("game-arena"),
 					imagesToLoad = ["images/logo.png", "images/background.jpg", "images/explosion.png", "images/invader.png", "images/double-weapon-invader.png", "images/spacecraft.png"];
 
 				ImageManager.loadImages(imagesToLoad).then(function() {
-					let game = new SpaceInvaders({ canvas: canvas });
+					let game = new AirBattles({ canvas: canvas });
 					game.run();
 				}).catch(function(err) {
 					throw new Error(`Air Battles cannot be run! Reason: ${err.reason}.`);

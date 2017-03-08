@@ -74,6 +74,7 @@ define(["framework/utils"], function(Utils) {
 			that.update(lastFrameEllapsedTime, that.keyboard);
 			that.render();
 
+			that.createdOn = Date.now();
 			that.lastFrameTime = Date.now();
 
 			requestAnimationFrame(that.run.bind(that));

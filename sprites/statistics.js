@@ -21,7 +21,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 		update(lastFrameEllapsedTime, keyboard) {
 			let that = this;
 
-			that.lives = that.game.spacecraft ? that.game.spacecraft.lives : 0;
+			that.lives = that.game.player ? that.game.player.lives : 0;
 			that.level = that.game.level;
 			that.scores = that.game.scores;
 		}

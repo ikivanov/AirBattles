@@ -38,8 +38,10 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 			let that = this,
 				ctx = that.context;
 
+			ctx.save();
 			ctx.fillStyle = "yellow";
 			ctx.fillRect(that.x, that.y, that.width, that.height);
+			ctx.restore();
 		}
 
 		onCollidedWith(sprite) {

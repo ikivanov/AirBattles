@@ -1,5 +1,5 @@
-define(["framework/utils", "sprites/spacecraft", "sprites/shield", "sprites/invader", "sprites/double-weapon-invader", "consts"],
-	function(Utils, Spacecraft, Shield, Invader, DoubleWeaponInvader, consts) {
+define(["framework/utils", "sprites/player", "sprites/fighter", "consts"],
+	function(Utils, Player, Fighter, consts) {
 	const MAX_LEVEL = 4;
 
 	class BaseLevel {
@@ -8,14 +8,14 @@ define(["framework/utils", "sprites/spacecraft", "sprites/shield", "sprites/inva
 
 			that.game = config.game;
 
-			that.initialSpacecraftX = 275;
-			that.initialSpacecraftY = 540;
+			that.initialPlayerX = 275;
+			that.initialPlayerY = 540;
 		}
 
 		load() {
 			let that = this;
 
-			that.createSpacecraft();
+			that.createPlayer();
 			
 			// ground units
 			// that.createBunkers(); -> circle with B inside
@@ -24,46 +24,19 @@ define(["framework/utils", "sprites/spacecraft", "sprites/shield", "sprites/inva
 			// that.createRPGUnits(); -> circle with RPG inside
 		}
 
-		createSpacecraft() {
-			let that = this,
-				spacecraft = new Spacecraft({ x: that.initialSpacecraftX, y: that.initialSpacecraftY });
+		loadMore() {
+		}
 
-			that.game.addChild(spacecraft);
-			that.game.spacecraft = spacecraft;
+		createPlayer() {
+			let that = this,
+				player = new Player({ x: that.initialPlayerX, y: that.initialPlayerY });
+
+			that.game.addChild(player);
+			that.game.player = player;
 		}
 	}
 
 	class Level1 extends BaseLevel {
-	}
-
-	class Level2 extends BaseLevel {
-		constructor(config) {
-			super(config);
-
-			let that = this;
-
-			that.initialSpacecraftX = 185;
-			that.initialSpacecraftY = 540;
-		}
-	}
-
-	class Level3 extends BaseLevel {
-		constructor(config) {
-			super(config);
-
-			let that = this;
-
-			that.initialSpacecraftX = 185;
-			that.initialSpacecraftY = 540;
-		}
-	}
-
-	class Level4 extends BaseLevel {
-		constructor(config) {
-			super(config);
-
-			let that = this;
-		}
 	}
 
 	class LevelFactory {

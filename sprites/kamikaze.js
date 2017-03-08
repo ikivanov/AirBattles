@@ -52,7 +52,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			}
 
 			if (that.y + that.height > that.game.height) {
-				that.game.onInvaderOutOfScreen(that);
+				that.game.onKamikazeOutOfScreen(that);
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);

@@ -11,7 +11,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		IMAGE_FILENAME = "images/spacecraft.png",
 		LIVES = 3;
 
-	class Spacecraft extends Sprite {
+	class Player extends Sprite {
 		constructor(config) {
 			super({
 				x: config.x,
@@ -82,12 +82,12 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 				type = sprite.__type;
 
 			if (type === consts.SpriteType.Missile ||
-				type === consts.SpriteType.Invader ||
-				type === consts.SpriteType.DoubleWeaponInvader) {
+				type === consts.SpriteType.Fighter ||
+				type === consts.SpriteType.Kamikaze) {
 				that.lives--;
 
 				if (that.lives === 0) {
-					that.game.removeSpacecraft(that);
+					that.game.removePlayer(that);
 
 					that.game.addChild(new Explosion({ x: that.x, y: that.y }));
 				}
@@ -107,5 +107,5 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		}
 	}
 
-	return Spacecraft;
+	return Player;
 });

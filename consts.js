@@ -2,12 +2,11 @@ define([], function() {
 	let consts = {
 		SpriteType: {
 			Background: "Background",
-			DoubleWeaponInvader: "DoubleWeaponInvader",
 			Explosion: "Explosion",
-			Invader: "Invader",
+			Fighter: "Fighter",
+			Kamikaze: "Kamikaze",
 			Missile: "Missile",
-			Shield: "Shield",
-			Spacecraft: "Spacecraft",
+			Player: "Player",
 			Statistics: "Statistics"
 		}
 	};

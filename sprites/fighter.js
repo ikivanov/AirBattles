@@ -7,7 +7,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		SPEED_X = 60,
 		SPEED_Y = 150;
 
-	class Invader extends Sprite {
+	class Fighter extends Sprite {
 		constructor(config) {
 			if (!config.imageFilename) {
 				config.imageFilename = IMAGE_FILENAME;
@@ -27,7 +27,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			that.lives = config.lives !== undefined ? config.lives : 1;
 
 			that.zIndex = 20;
-			that.__type = consts.SpriteType.Invader;
+			that.__type = consts.SpriteType.Fighter;
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
@@ -52,7 +52,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			}
 
 			if (that.y + that.height > that.game.height) {
-				that.game.onInvaderOutOfScreen(that);
+				that.game.onFighterOutOfScreen(that);
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);
@@ -77,5 +77,5 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		}
 	}
 
-	return Invader;
+	return Fighter;
 });

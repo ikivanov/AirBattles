@@ -1,16 +1,11 @@
 define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/background", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "consts"],
 	function(Game, SplashScreen, Label, Background, Statistics, FPSCounter, LevelFactory, Missile, consts) {
 	const
-		SPACECRAFT_POSITION = { x: 275, y: 540 },
-		SPACECRAFT_MISSILE_VELOCITY = -600,
+		PLAYER_MISSILE_VELOCITY = -600,
 		HEIGHT = 600,
-		INVADER_WIDTH = 50,
-		INVADER_HEIGHT = 55,
-		INVADER_FIRE_INTERVAL = 1000,
-		INVADER_MISSILE_VELOCITY = 300,
 		MAX_LEVEL = 4;
 
-	class SpaceInvaders extends Game {
+	class AirBattles extends Game {
 		constructor(config) {
 			super(config);
 
@@ -78,45 +73,22 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 
 		onAfterUpdate(lastFrameEllapsedTime) {
 			let that = this,
-				now = new Date();
+				now = Date.now();
 
 			that._removeCompletedExplosions();
 
-			if (that.levelDescriptor && now.getTime() - that.levelDescriptorCreated.getTime() > 1000) {
+			if (that.levelDescriptor && now - that.levelDescriptorCreated.getTime() > 1000) {
 				that.removeChild(that.levelDescriptor);
 				that.levelDescriptor = null;
 
 				that.loadLevel(that.level);
 			}
 
-			if (!that.currentLevel || !that.spacecraft) {
+			if (!that.currentLevel || !that.player) {
 				return;
 			}
 
-			if (now.getTime() - that.lastEnemyMissileLaunchTime.getTime() > that.currentLevel.invaderFireInterval) {
-				let x = that.spacecraft.x,
-					invadersInSpacecraftRange = that.sprites.filter(sprite =>
-																			(sprite.__type === consts.SpriteType.Invader ||
-																			sprite.__type === consts.SpriteType.DoubleWeaponInvader) &&
-																			sprite.x >= x - sprite.width &&
-																			sprite.x <= x + sprite.width);
-
-				if (!invadersInSpacecraftRange || invadersInSpacecraftRange.length === 0) {
-					return;
-				}
-
-				let attackingInvader = invadersInSpacecraftRange.reduce((a, b) => a.y < b.y ? b : a);
-				if (attackingInvader) {
-					if (attackingInvader.__type === consts.SpriteType.Invader) {
-						that.addChild(new Missile({ velocityY: INVADER_MISSILE_VELOCITY, x : attackingInvader.x + INVADER_WIDTH / 2, y: attackingInvader.y + INVADER_HEIGHT }));
-					} else if (attackingInvader.__type === consts.SpriteType.DoubleWeaponInvader) {
-						that.addChild(new Missile({ velocityY: INVADER_MISSILE_VELOCITY, x : attackingInvader.x + 3, y: attackingInvader.y + INVADER_HEIGHT}));
-						that.addChild(new Missile({ velocityY: INVADER_MISSILE_VELOCITY, x : attackingInvader.x + INVADER_WIDTH - 3, y: attackingInvader.y + INVADER_HEIGHT }));
-					}
-
-					that.lastEnemyMissileLaunchTime = new Date();
-				}
-			}
+			that.currentLevel.loadMore();
 		}
 
 		onLevelCompleted() {
@@ -139,7 +111,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 		onMissileLaunched(x, y) {
 			let that = this;
 
-			that.addChild(new Missile({ x, y: y - 10, velocityY: SPACECRAFT_MISSILE_VELOCITY }));
+			that.addChild(new Missile({ x, y: y - 10, velocityY: PLAYER_MISSILE_VELOCITY }));
 		}
 
 		onMissileOutOfScreen(missile) {
@@ -148,10 +120,16 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 			that.removeChild(missile);
 		}
 
-		onInvaderOutOfScreen(invader) {
+		onFighterOutOfScreen(fighter) {
 			let that = this;
 
-			that.gameOver();
+			that.removeChild(fighter);
+		}
+
+		onKamikazeOutOfScreen(kamikaze) {
+			let that = this;
+
+			that.removeChild(kamikaze);
 		}
 
 		isLevelCompleted() {
@@ -175,7 +153,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 
 			let that = this,
 				sprites = that.sprites.find(sprite => sprite.__type === consts.SpriteType.Explosion ||
-													sprite.__type === consts.SpriteType.Spacecraft ||
+													sprite.__type === consts.SpriteType.Player ||
 													sprite.__type === consts.SpriteType.Missile);
 
 			if (!sprites) {
@@ -200,13 +178,13 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 			that.scores += that.level * invader.scoreBonus;
 		}
 
-		removeSpacecraft(sprite) {
+		removePlayer(sprite) {
 			let that = this;
 
 			that.removeChild(sprite);
-			that.spacecraft = null;
+			that.player = null;
 		}
 	}
 
-	return SpaceInvaders;
+	return AirBattles;
 });
