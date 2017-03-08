@@ -1,0 +1,30 @@
+<html>
+	<style>
+		#game-arena {
+			cursor: crosshair;
+		}
+	</style>
+
+	<body>
+		<canvas id="game-arena" width="600" height="600"></canvas>
+	</body>
+
+	<script type="text/javascript" src="framework/requestAnimationFrame-pollyfill.js"></script>
+ 	<script src="lib/require.js"></script>
+
+ 	<script type="text/javascript">
+		window.onload = function() {
+			require(["framework/utils", "air-battles", "framework/image-manager"], function(Utils, SpaceInvaders, ImageManager) {
+				let canvas = document.getElementById("game-arena"),
+					imagesToLoad = ["images/logo.png", "images/background.jpg", "images/explosion.png", "images/invader.png", "images/double-weapon-invader.png", "images/spacecraft.png"];
+
+				ImageManager.loadImages(imagesToLoad).then(function() {
+					let game = new SpaceInvaders({ canvas: canvas });
+					game.run();
+				}).catch(function(err) {
+					throw new Error(`Air Battles cannot be run! Reason: ${err.reason}.`);
+				});
+			});
+		}
+	</script>
+</html>
