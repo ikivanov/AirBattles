@@ -21,16 +21,28 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 		loadSprites() {
 			let that = this;
 
-			that.lastEnemyMissileLaunchTime = new Date();
-
-			that.addChild(new Background());
 			that.addChild(new Statistics({ x: 25, y: 25 }));
-			that.addChild(new FPSCounter({ x: 545, y: 25 }));
+			that.addChild(new FPSCounter({ x: 545, y: 25, zIndex: 10 }));
 
 			that.level = 1;
 			that.levelDescriptorCreated = new Date();
-			that.levelDescriptor = new Label({ text: `Battle for Sofia. Loading...`, x: 175, y: 300, color: "yellow", size: 22 });
+			that.levelDescriptor = that.getLevelDescriptorLabel();
 			that.addChild(that.levelDescriptor);
+		}
+
+		getLevelDescriptorLabel() {
+			let that = this;
+
+			return new Label({
+				text: `${that.currentLevel.name}. Loading...`,
+				x: 0,
+				y: 0,
+				width: that.canvas.width,
+				height: that.canvas.height,
+				color: "yellow",
+				size: 22,
+				backgroundColor: "black"
+			});
 		}
 
 		getGameOverLabel() {
@@ -53,13 +65,6 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 			that.sprites = that.sprites.filter(sprite => sprite.isNonPlayable === true);
 		}
 
-		loadLevel(level) {
-			let that = this;
-
-			that.currentLevel = LevelFactory.create(level, { game: that });
-			that.currentLevel.load();
-		}
-
 		_removeCompletedExplosions() {
 			let that = this,
 				explosionsCompleted = that.sprites.filter(sprite => sprite.__type === consts.SpriteType.Explosion && sprite.isCompleted);
@@ -71,17 +76,28 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 			}
 		}
 
+		onSplashScreenNeedsRemoval(splashScreen) {
+			let that = this;
+
+			that.removeChild(splashScreen);
+
+			that.currentLevel = LevelFactory.create(that.level, { game: that });
+
+			that.loadSprites();
+			that.start();
+		}
+
 		onAfterUpdate(lastFrameEllapsedTime) {
 			let that = this,
 				now = Date.now();
 
 			that._removeCompletedExplosions();
 
-			if (that.levelDescriptor && now - that.levelDescriptorCreated.getTime() > 1000) {
+			if (that.levelDescriptor && now - that.levelDescriptorCreated.getTime() > 2000) {
 				that.removeChild(that.levelDescriptor);
 				that.levelDescriptor = null;
 
-				that.loadLevel(that.level);
+				that.currentLevel.load();
 			}
 
 			if (!that.currentLevel || !that.player) {
@@ -99,12 +115,13 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 				return;
 			}
 
-			that.currentLevel = null;
 			that.cleanUpLevel();
 			that.level++;
+			that.currentLevel = LevelFactory.create(that.level, { game: that });
+			that.currentLevel.load();
 
 			that.levelDescriptorCreated = new Date();
-			that.levelDescriptor = new Label({ text: `Level ${that.level} is loading... Get ready!`, x: 175, y: 300, color: "red", size: 22 });
+			that.levelDescriptor = that.getLevelDescriptorLabel();
 			that.addChild(that.levelDescriptor);
 		}
 
@@ -134,7 +151,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 
 		isLevelCompleted() {
 			return false;
-			
+
 			let that = this,
 				sprites = that.sprites.find((sprite) => sprite.__type === consts.SpriteType.Invader ||
 															sprite.__type === consts.SpriteType.DoubleWeaponInvader ||

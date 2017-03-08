@@ -31,10 +31,9 @@ define(["../framework/image-manager", "../framework/sprite"], function(ImageMana
 				that.lastTime = Date.now();
 			}
 
+
 			if (keyboard.keys.Space) {
-				that.game.removeChild(that);
-				that.game.loadSprites();
-				that.game.start();
+				that.game.onSplashScreenNeedsRemoval(that);
 			}
 		}
 

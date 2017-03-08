@@ -30,8 +30,6 @@ define(["framework/utils"], function(Utils) {
 			if (splashScreen) {
 				that.splashScreen = splashScreen;
 				that.addChild(that.splashScreen);
-			} else {
-				that.loadSprites();
 			}
 
 			that.gameOverLabel = that.getGameOverLabel();
@@ -148,9 +146,6 @@ define(["framework/utils"], function(Utils) {
 		}
 
 		cleanUpLevel() {
-		}
-
-		loadLevel() {
 		}
 
 		onLevelCompleted() {

@@ -1,5 +1,5 @@
-define(["framework/utils", "sprites/player", "sprites/fighter", "consts"],
-	function(Utils, Player, Fighter, consts) {
+define(["framework/utils", "sprites/background", "sprites/player", "sprites/fighter", "consts"],
+	function(Utils, Background, Player, Fighter, consts) {
 	const MAX_LEVEL = 4;
 
 	class BaseLevel {
@@ -8,6 +8,7 @@ define(["framework/utils", "sprites/player", "sprites/fighter", "consts"],
 
 			that.game = config.game;
 
+			that.name = config.name || "";
 			that.initialPlayerX = 275;
 			that.initialPlayerY = 540;
 		}
@@ -15,8 +16,9 @@ define(["framework/utils", "sprites/player", "sprites/fighter", "consts"],
 		load() {
 			let that = this;
 
+			that.createBackground();
 			that.createPlayer();
-			
+
 			// ground units
 			// that.createBunkers(); -> circle with B inside
 			// that.createBTRs(); -> rectangle with BTR inside
@@ -25,6 +27,9 @@ define(["framework/utils", "sprites/player", "sprites/fighter", "consts"],
 		}
 
 		loadMore() {
+		}
+
+		createBackground() {
 		}
 
 		createPlayer() {
@@ -37,6 +42,43 @@ define(["framework/utils", "sprites/player", "sprites/fighter", "consts"],
 	}
 
 	class Level1 extends BaseLevel {
+		constructor(config) {
+			config = config || {};
+			config.name = "Battle for Sofia";
+
+			super(config);
+		}
+
+		createBackground() {
+			let that = this;
+
+			that.game.addChild(new Background({
+				intialX: 0,
+				intialY: 5743,
+				velocityY: -25,
+				imageFilename: "images/level1-background.jpg"
+			}));
+		}
+	}
+
+	class Level2 extends BaseLevel {
+		constructor(config) {
+			config = config || {};
+			config.name = "Battle for Beograd";
+
+			super(config);
+		}
+
+		createBackground() {
+			let that = this;
+
+			that.game.addChild(new Background({
+				intialX: 0,
+				intialY: 5743,
+				velocityY: -25,
+				imageFilename: "images/level1-background.jpg"
+			}));
+		}
 	}
 
 	class LevelFactory {

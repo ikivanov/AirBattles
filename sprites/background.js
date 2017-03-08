@@ -1,18 +1,12 @@
 define(["../framework/sprite", "../consts"], function(Sprite, consts) {
-	const IMAGE_FILENAME = "images/background.jpg",
-		WIDTH = 600,
-		HEIGHT = 600,
-		SPEED_Y = -25,
-		INITIAL_X = 5743;
-
 	class Background extends Sprite {
-		constructor() {
+		constructor(config) {
 			super({
-				x: 0,
-				y: INITIAL_X,
-				velocityX: 0,
-				velocityY: SPEED_Y,
-				imageFilename: IMAGE_FILENAME,
+				x: config.initialX || 0,
+				y: config.intialY || 0,
+				velocityX: config.velocityX || 0,
+				velocityY: config.velocityY || 0,
+				imageFilename: config.imageFilename || "",
 				isNonPlayable: true
 			});
 
@@ -33,9 +27,11 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 
 		render() {
 			let that = this,
-				ctx = that.context;
+				ctx = that.context,
+				width = that.game.canvas.width,
+				height = that.game.canvas.height;
 
-			ctx.drawImage(that.image, that.x, that.y, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
+			ctx.drawImage(that.image, that.x, that.y, width, height, 0, 0, width, height);
 		}
 	}
 
