@@ -9,6 +9,7 @@ define(["framework/image-manager"], function(ImageManager) {
 			that.y = config.y;
 			that.width = config.width;
 			that.height = config.height;
+			that.angle = 0;
 			that.zIndex = config.zIndex !== undefined ? config.zIndex : 0;
 
 			that.image = null;
@@ -38,8 +39,15 @@ define(["framework/image-manager"], function(ImageManager) {
 				ctx = that.context;
 
 			if (that.image) {
-				ctx.drawImage(that.image, that.x, that.y);
-				return;
+				if (that.angle !== 0) {
+					ctx.save();
+					ctx.translate(that.x, that.y);
+					ctx.rotate(that.angle);
+					ctx.drawImage(that.image, -that.width, -that.height);
+					ctx.restore();
+				} else {
+					ctx.drawImage(that.image, that.x, that.y);
+				}
 			}
 		}
 

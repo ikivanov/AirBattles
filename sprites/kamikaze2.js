@@ -7,7 +7,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		SPEED_X = 0,
 		SPEED_Y = 500;
 
-	class Kamikaze extends Sprite {
+	class Kamikaze2 extends Sprite {
 		static get Width() {
 			return WIDTH;
 		}
@@ -32,17 +32,31 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			that.angle = Math.PI;
 			that.scoreBonus = 10;
 			that.lives = config.lives !== undefined ? config.lives : 1;
+			that.isChasing = false;
 
 			that.zIndex = 20;
 			that.__type = consts.SpriteType.Kamikaze;
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
-			let that = this;
+			let that = this,
+				targetX = that.game.player.x,
+				targetY = that.game.player.y;
 
-			super.update(lastFrameEllapsedTime, keyboard);
+			if (that.y <= 55) {
+				super.update(lastFrameEllapsedTime, keyboard);
+			} else if (that.y > 55 && targetY > that.y && !that.isChasing) {
+				that.isChasing = true;
+				that.distance = Math.sqrt(Math.pow(targetX - that.x, 2) + Math.pow(targetY - that.y, 2));
+				that.directionX = (targetX - that.x) / that.distance;
+				that.directionY = (targetY - that.y) / that.distance;
+			} else if (that.isChasing) {
+				that.x += that.directionX * SPEED_Y * lastFrameEllapsedTime;
+				that.y += that.directionY * SPEED_Y * lastFrameEllapsedTime;
+			}
 
-			if (that.y + that.height > that.game.height) {
+
+			if (that.x < 0 || that.x > that.game.width || that.y + that.height > that.game.height) {
 				that.game.onKamikazeOutOfScreen(that);
 			}
 		}
@@ -64,5 +78,5 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		}
 	}
 
-	return Kamikaze;
+	return Kamikaze2;
 });

@@ -2,16 +2,24 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 	const SPEED_X = 300,
 		SPEED_Y = 300,
 		MIN_X = 5,
-		MAX_X = 545,
+		MAX_X = 538,
 		MIN_Y = 5,
-		MAX_Y = 545,
-		WIDTH = 50,
-		HEIGHT = 46,
+		MAX_Y = 520,
+		WIDTH = 57,
+		HEIGHT = 75,
 		FIRE_INTERVAL = 250,
-		IMAGE_FILENAME = "images/spacecraft.png",
+		IMAGE_FILENAME = "images/mig-47.png",
 		LIVES = 3;
 
 	class Player extends Sprite {
+		static get Width() {
+			return WIDTH;
+		}
+
+		static get Height() {
+			return HEIGHT;
+		}
+
 		constructor(config) {
 			super({
 				x: config.x,
@@ -27,7 +35,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			that.lives = LIVES;
 
 			that.zIndex = 20;
-			that.__type = consts.SpriteType.Spacecraft;
+			that.__type = consts.SpriteType.Player;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {

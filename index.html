@@ -16,7 +16,7 @@
 		window.onload = function() {
 			require(["framework/utils", "air-battles", "framework/image-manager"], function(Utils, AirBattles, ImageManager) {
 				let canvas = document.getElementById("game-arena"),
-					imagesToLoad = ["images/logo.png", "images/level1-background.jpg", "images/explosion.png", "images/invader.png", "images/double-weapon-invader.png", "images/spacecraft.png"];
+					imagesToLoad = ["images/logo.png", "images/level1-background.jpg", "images/explosion.png", "images/invader.png", "images/double-weapon-invader.png", "images/spacecraft.png", "images/mig-47.png", "images/f-35d.png", "images/su-55.png"];
 
 				ImageManager.loadImages(imagesToLoad).then(function() {
 					let game = new AirBattles({ canvas: canvas });
