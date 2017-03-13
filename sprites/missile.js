@@ -12,6 +12,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 
 			let that = this;
 
+			that.owner = config.owner || "";
 			that.type = config.type;
 			that.color = config.color || "yellow";
 			that.velocityY = config.velocityY !== undefined ? config.velocityY : VELOCITY_Y;
@@ -20,7 +21,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 				that.velocityY *= -1;
 			}
 
-			that.zIndex = 15;
+			that.zIndex = 25;
 			that.__type = consts.SpriteType.Missile;
 		}
 

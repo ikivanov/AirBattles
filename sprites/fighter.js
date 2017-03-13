@@ -60,8 +60,9 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/
 				that.game.addChild(new Missile({
 					velocityY: MISSILE_VELOCITY,
 					x : that.x + WIDTH / 2,
-					y: that.y + HEIGHT + 5,
-					color: "gold"
+					y: that.y + HEIGHT + 1,
+					color: "gold",
+					owner: that
 				}));
 				that.lastFireTime = now;
 			}

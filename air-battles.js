@@ -128,7 +128,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 		onMissileLaunched(x, y) {
 			let that = this;
 
-			that.addChild(new Missile({ x, y: y - 10, velocityY: PLAYER_MISSILE_VELOCITY }));
+			that.addChild(new Missile({ x, y: y - 1, velocityY: PLAYER_MISSILE_VELOCITY, owner: that.player }));
 		}
 
 		onMissileOutOfScreen(missile) {
