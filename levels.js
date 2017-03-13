@@ -55,7 +55,7 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 			this.lastFighterLaunched = Date.now();
 			this.intervalBetweenFighterLaunches = 250;
 			this.fighterLauchesMinIntervalValue = 1000;
-			this.fighterLauchesMaxIntervalValue = 1500;
+			this.fighterLauchesMaxIntervalValue = 2000;
 		}
 
 		createBackground() {
@@ -129,7 +129,7 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 				}));
 
 				that.lastKamikazeLaunched = now;
-				that.intervalBetweenKamikazeLaunches = Utils.randomRange(2500, 5000);
+				that.intervalBetweenKamikazeLaunches = Utils.randomRange(3500, 5000);
 			}
 		}
 	}

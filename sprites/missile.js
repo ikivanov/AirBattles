@@ -13,6 +13,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 			let that = this;
 
 			that.type = config.type;
+			that.color = config.color || "yellow";
 			that.velocityY = config.velocityY !== undefined ? config.velocityY : VELOCITY_Y;
 
 			if (that.type === "allied") {
@@ -39,7 +40,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 				ctx = that.context;
 
 			ctx.save();
-			ctx.fillStyle = "yellow";
+			ctx.fillStyle = that.color;
 			ctx.fillRect(that.x, that.y, that.width, that.height);
 			ctx.restore();
 		}

@@ -98,6 +98,8 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 					that.game.removePlayer(that);
 
 					that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+				} else {
+					that.game.runPlayerDamageEffect();
 				}
 			}
 		}
