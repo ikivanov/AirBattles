@@ -2,10 +2,19 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 	function(Game, SplashScreen, Label, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, consts) {
 	const
 		PLAYER_MISSILE_VELOCITY = -600,
+		WIDTH = 600,
 		HEIGHT = 600,
 		MAX_LEVEL = 4;
 
 	class AirBattles extends Game {
+		static get Width() {
+			return WIDTH;
+		}
+
+		static get Height() {
+			return HEIGHT;
+		}
+
 		constructor(config) {
 			super(config);
 
@@ -128,7 +137,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		onMissileLaunched(x, y) {
 			let that = this;
 
-			that.addChild(new Missile({ x, y: y - 1, velocityY: PLAYER_MISSILE_VELOCITY, owner: that.player }));
+			that.addChild(new Missile({ x, y: y - 15, velocityY: PLAYER_MISSILE_VELOCITY, owner: that.player }));
 		}
 
 		onMissileOutOfScreen(missile) {

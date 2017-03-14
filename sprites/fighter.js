@@ -43,7 +43,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/
 		update (lastFrameEllapsedTime, keyboard) {
 			let that = this;
 
-			if (that.y + that.height > that.game.height) {
+			if (that.y > that.game.height) {
 				that.game.onFighterOutOfScreen(that);
 			}
 

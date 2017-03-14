@@ -40,8 +40,9 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 
 		update (lastFrameEllapsedTime, keyboard) {
 			let that = this,
-				targetX = that.game.player.x,
-				targetY = that.game.player.y;
+				player = that.game.player,
+				targetX = player ? player.x : that.x,
+				targetY = player ? player.y : that.game.Height;
 
 			if (that.y <= 55) {
 				super.update(lastFrameEllapsedTime, keyboard);
@@ -56,7 +57,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			}
 
 
-			if (that.x < 0 || that.x > that.game.width || that.y + that.height > that.game.height) {
+			if (that.x < 0 || that.x > that.game.width || that.y > that.game.height) {
 				that.game.onKamikazeOutOfScreen(that);
 			}
 		}

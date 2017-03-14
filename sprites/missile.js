@@ -31,7 +31,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 			super.update(lastFrameEllapsedTime, keyboard);
 
 			if (that.x <= 0 || that.x + that.width >= that.game.width ||
-				that.y <= 0 || that.y + that.height > that.game.height) {
+				that.y <= 0 || that.y > that.game.height) {
 				that.game.onMissileOutOfScreen(that);
 			}
 		}
