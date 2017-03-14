@@ -1,5 +1,5 @@
-define(["framework/utils", "sprites/background", "sprites/player", "sprites/fighter", "sprites/kamikaze", "sprites/kamikaze2", "consts"],
-	function(Utils, Background, Player, Fighter, Kamikaze, Kamikaze2, consts) {
+define(["framework/utils", "sprites/background", "sprites/player", "sprites/fighter", "sprites/kamikaze", "sprites/kamikaze2", "sprites/power-up-2x-basic", "consts"],
+	function(Utils, Background, Player, Fighter, Kamikaze, Kamikaze2, PowerUp2xBasic, consts) {
 	const MAX_LEVEL = 4;
 
 	class BaseLevel {
@@ -48,6 +48,8 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 
 			super(config);
 
+			this.levelStart = Date.now();
+			this.powerUpDroped = false;
 			this.lastKamikazeLaunched = Date.now();
 			this.lastKamikaze2Launched = Date.now();
 			this.intervalBetweenKamikazeLaunches = 5000;
@@ -75,6 +77,7 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 			that.launchFighter();
 			that.launchKamikaze();
 			that.launchKamikaze2();
+			that.dropPowerUp();
 		}
 
 
@@ -130,6 +133,23 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 
 				that.lastKamikazeLaunched = now;
 				that.intervalBetweenKamikazeLaunches = Utils.randomRange(3500, 5000);
+			}
+		}
+
+		dropPowerUp() {
+			if (this.powerUpDroped) {
+				return;
+			}
+
+			let that = this,
+				now = Date.now();
+
+			if (now - that.levelStart > 60000) {
+				that.game.addChild(new PowerUp2xBasic({
+					x: Utils.randomRange(0, that.game.width - PowerUp2xBasic.Width),
+					y: -PowerUp2xBasic.Height
+				}));
+				that.powerUpDroped = true;
 			}
 		}
 	}

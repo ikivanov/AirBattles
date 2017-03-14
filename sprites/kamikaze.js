@@ -29,7 +29,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			that.initialX = that.x;
 			that.velocityX = SPEED_X;
 			that.velocityY = SPEED_Y;
-			that.angle = Math.PI;
+			that.angle = 180;
 			that.scoreBonus = 10;
 			that.lives = config.lives !== undefined ? config.lives : 1;
 

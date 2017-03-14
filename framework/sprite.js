@@ -42,7 +42,7 @@ define(["framework/image-manager"], function(ImageManager) {
 				if (that.angle !== 0) {
 					ctx.save();
 					ctx.translate(that.x, that.y);
-					ctx.rotate(that.angle);
+					ctx.rotate((that.angle * Math.PI) / 180);
 					ctx.drawImage(that.image, -that.width, -that.height);
 					ctx.restore();
 				} else {

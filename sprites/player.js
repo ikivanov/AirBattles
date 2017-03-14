@@ -31,6 +31,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 
 			let that = this;
 
+			that.doubleFire = false;
 			that.lastFireTime = new Date();
 			that.lives = LIVES;
 
@@ -81,7 +82,13 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 
 			if (keyboard.keys.Space === true && that._canFire()) {
 				let centerX = Math.floor(that.x + WIDTH / 2);
-				that.game.onMissileLaunched(centerX, that.y);
+
+				if (that.doubleFire) {
+					that.game.onMissileLaunched(centerX - 15, that.y);
+					that.game.onMissileLaunched(centerX + 15, that.y);
+				} else {
+					that.game.onMissileLaunched(centerX, that.y);
+				}
 			}
 		}
 
@@ -101,6 +108,10 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 				} else {
 					that.game.runPlayerDamageEffect();
 				}
+			}
+
+			if (type === consts.SpriteType.PowerUp2xBasic) {
+				that.doubleFire = true;
 			}
 		}
 

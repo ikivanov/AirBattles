@@ -30,7 +30,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/
 			that.initialX = that.x;
 			that.velocityX = SPEED_X;
 			that.velocityY = SPEED_Y;
-			that.angle = Math.PI;
+			that.angle = 180;
 			that.fireInterval = config.fireInterval !== undefined ? config.fireInterval : FIRE_INTERVAL;
 			that.lastFireTime = Date.now();
 			that.scoreBonus = 10;

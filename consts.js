@@ -7,7 +7,8 @@ define([], function() {
 			Kamikaze: "Kamikaze",
 			Missile: "Missile",
 			Player: "Player",
-			Statistics: "Statistics"
+			Statistics: "Statistics",
+			PowerUp2xBasic: "PowerUp2xBasic"
 		}
 	};
 

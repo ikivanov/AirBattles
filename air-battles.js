@@ -1,5 +1,5 @@
-define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/background", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "sprites/player-damage-effect", "consts"],
-	function(Game, SplashScreen, Label, Background, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, consts) {
+define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "sprites/player-damage-effect", "consts"],
+	function(Game, SplashScreen, Label, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, consts) {
 	const
 		PLAYER_MISSILE_VELOCITY = -600,
 		HEIGHT = 600,
@@ -147,6 +147,12 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/b
 			let that = this;
 
 			that.removeChild(kamikaze);
+		}
+
+		onPowerUpOutOfScreen(powerUp) {
+			let that = this;
+
+			that.removeChild(powerUp);
 		}
 
 		runPlayerDamageEffect() {
