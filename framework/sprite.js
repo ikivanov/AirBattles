@@ -23,15 +23,32 @@ define(["framework/image-manager"], function(ImageManager) {
 			that.isVisible = config.isVisible !== undefined ? config.isVisible : true;
 			that.isDestoyed = false;
 			that.isNonPlayable = config.isNonPlayable !== undefined ? config.isNonPlayable : false;
+			that.shadow = null;
+
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this,
-				distanceX = that.velocityX * lastFrameEllapsedTime,
+			let that = this;
+
+			let distanceX = that.velocityX * lastFrameEllapsedTime,
 				distanceY = that.velocityY * lastFrameEllapsedTime;
 
 			that.x += distanceX;
 			that.y += distanceY;
+
+			that.updateShadow(that.x, that.y);
+		}
+
+		updateShadow(x, y) {
+			let that = this,
+				shadow = that.shadow;
+
+			if (!shadow) {
+				return;
+			}
+
+			shadow.x = x;
+			shadow.y = y;
 		}
 
 		render() {

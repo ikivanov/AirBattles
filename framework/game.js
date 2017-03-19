@@ -207,11 +207,18 @@ define(["framework/utils"], function(Utils) {
 				return;
 			}
 
-			let that = this;
+			let that = this,
+				shadow = sprite.shadow;
 
 			that.sprites.push(sprite);
 			sprite.context = that.context;
 			sprite.game = that;
+
+			if (shadow) {
+				that.sprites.push(shadow);
+				shadow.context = that.context;
+				shadow.game = that;
+			}
 
 			that.sprites.sort((a, b) => a.zIndex - b.zIndex);
 		}
@@ -234,7 +241,18 @@ define(["framework/utils"], function(Utils) {
 			}
 
 			let that = this,
-				index = that.sprites.indexOf(sprite);
+				index = that.sprites.indexOf(sprite),
+				shadow = sprite.shadow;
+
+			if (index !== -1) {
+				that.sprites.splice(index, 1);
+			}
+
+			if (!shadow) {
+				return;
+			}
+
+			index = that.sprites.indexOf(shadow);
 
 			if (index !== -1) {
 				that.sprites.splice(index, 1);

@@ -1,4 +1,4 @@
-define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sprite, consts, Explosion) {
+define(["../framework/sprite", "../consts", "../sprites/explosion", "../framework/shadow"], function(Sprite, consts, Explosion, Shadow) {
 	const SPEED_X = 300,
 		SPEED_Y = 300,
 		MIN_X = 5,
@@ -9,7 +9,11 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 		HEIGHT = 75,
 		FIRE_INTERVAL = 250,
 		IMAGE_FILENAME = "images/mig-47.png",
-		LIVES = 3;
+		SHADOW_IMAGE_FILENAME = "images/mig-47-shadow.png",
+		LIVES = 3,
+		SHADOW_ZINDEX = 19,
+		SHADOW_OFFSET_X = -15,
+		SHADOW_OFFSET_Y = 25;
 
 	class Player extends Sprite {
 		static get Width() {
@@ -37,6 +41,13 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 
 			that.zIndex = 20;
 			that.__type = consts.SpriteType.Player;
+
+			that.shadow = new Shadow({
+				x: that.x + SHADOW_OFFSET_X,
+				y: that.y + SHADOW_OFFSET_Y,
+				imageFilename: SHADOW_IMAGE_FILENAME,
+				zIndex: 19
+			});
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
@@ -78,6 +89,10 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 				} else {
 					that.y += distanceY;
 				}
+			}
+
+			if (that.shadow) {
+				that.updateShadow(that.x + SHADOW_OFFSET_X, that.y + SHADOW_OFFSET_Y);
 			}
 
 			if (keyboard.keys.Space === true && that._canFire()) {

@@ -8,7 +8,8 @@ define([], function() {
 			Missile: "Missile",
 			Player: "Player",
 			Statistics: "Statistics",
-			PowerUp2xBasic: "PowerUp2xBasic"
+			PowerUp2xBasic: "PowerUp2xBasic",
+			Shadow: "Shadow"
 		}
 	};
 
