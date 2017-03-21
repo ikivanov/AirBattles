@@ -47,8 +47,8 @@ define(["framework/image-manager"], function(ImageManager) {
 				return;
 			}
 
-			shadow.x = x;
-			shadow.y = y;
+			shadow.x = x + shadow.offsetX;
+			shadow.y = y + shadow.offsetY;
 		}
 
 		render() {

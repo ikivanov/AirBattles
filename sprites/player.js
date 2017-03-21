@@ -12,8 +12,8 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 		SHADOW_IMAGE_FILENAME = "images/mig-47-shadow.png",
 		LIVES = 3,
 		SHADOW_ZINDEX = 19,
-		SHADOW_OFFSET_X = -15,
-		SHADOW_OFFSET_Y = 25;
+		SHADOW_OFFSET_X = -25,
+		SHADOW_OFFSET_Y = 35;
 
 	class Player extends Sprite {
 		static get Width() {
@@ -45,8 +45,11 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 			that.shadow = new Shadow({
 				x: that.x + SHADOW_OFFSET_X,
 				y: that.y + SHADOW_OFFSET_Y,
+				offsetX: SHADOW_OFFSET_X,
+				offsetY: SHADOW_OFFSET_Y,
 				imageFilename: SHADOW_IMAGE_FILENAME,
-				zIndex: 19
+				zIndex: SHADOW_ZINDEX,
+				owner: that
 			});
 		}
 
@@ -92,7 +95,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 			}
 
 			if (that.shadow) {
-				that.updateShadow(that.x + SHADOW_OFFSET_X, that.y + SHADOW_OFFSET_Y);
+				that.updateShadow(that.x, that.y);
 			}
 
 			if (keyboard.keys.Space === true && that._canFire()) {

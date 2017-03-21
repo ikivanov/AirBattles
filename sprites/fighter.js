@@ -1,12 +1,16 @@
-define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/missile"], function(Sprite, consts, Explosion, Missile) {
+define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/missile", "../framework/shadow"], function(Sprite, consts, Explosion, Missile, Shadow) {
 	const IMAGE_FILENAME = "images/f-35d.png",
+		SHADOW_IMAGE_FILENAME = "images/f-35d-shadow.png",
 		WIDTH = 57,
 		HEIGHT = 80,
 		FIRE_INTERVAL = 2000,
 		OFFSET_X = 50,
 		SPEED_X = 0,
 		SPEED_Y = 100,
-		MISSILE_VELOCITY = 400;
+		MISSILE_VELOCITY = 400,
+		SHADOW_ZINDEX = 19,
+		SHADOW_OFFSET_X = 10,
+		SHADOW_OFFSET_Y = 80;
 
 	class Fighter extends Sprite {
 		static get Width() {
@@ -38,6 +42,16 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/
 
 			that.zIndex = 20;
 			that.__type = consts.SpriteType.Fighter;
+
+			that.shadow = new Shadow({
+				x: that.x + SHADOW_OFFSET_X,
+				y: that.y + SHADOW_OFFSET_Y,
+				offsetX: SHADOW_OFFSET_X,
+				offsetY: SHADOW_OFFSET_Y,
+				imageFilename: SHADOW_IMAGE_FILENAME,
+				zIndex: SHADOW_ZINDEX,
+				owner: that
+			});
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {

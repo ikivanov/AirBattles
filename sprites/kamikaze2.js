@@ -1,11 +1,15 @@
-define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sprite, consts, Explosion) {
+define(["../framework/sprite", "../consts", "../sprites/explosion", "../framework/shadow"], function(Sprite, consts, Explosion, Shadow) {
 	const IMAGE_FILENAME = "images/su-55.png",
 		WIDTH = 50,
 		HEIGHT = 55,
 		FIRE_INTERVAL = 250,
 		OFFSET_X = 50,
 		SPEED_X = 0,
-		SPEED_Y = 500;
+		SPEED_Y = 500,
+		SHADOW_ZINDEX = 19,
+		SHADOW_IMAGE_FILENAME = "images/su-55-shadow.png",
+		SHADOW_OFFSET_X = 10,
+		SHADOW_OFFSET_Y = 70;
 
 	class Kamikaze2 extends Sprite {
 		static get Width() {
@@ -36,6 +40,16 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 
 			that.zIndex = 20;
 			that.__type = consts.SpriteType.Kamikaze;
+
+			that.shadow = new Shadow({
+				x: that.x + SHADOW_OFFSET_X,
+				y: that.y + SHADOW_OFFSET_Y,
+				offsetX: SHADOW_OFFSET_X,
+				offsetY: SHADOW_OFFSET_Y,
+				imageFilename: SHADOW_IMAGE_FILENAME,
+				zIndex: SHADOW_ZINDEX,
+				owner: that
+			});
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
@@ -54,8 +68,8 @@ define(["../framework/sprite", "../consts", "../sprites/explosion"], function(Sp
 			} else if (that.isChasing) {
 				that.x += that.directionX * SPEED_Y * lastFrameEllapsedTime;
 				that.y += that.directionY * SPEED_Y * lastFrameEllapsedTime;
+				that.updateShadow(that.x, that.y);
 			}
-
 
 			if (that.x < 0 || that.x > that.game.width || that.y > that.game.height) {
 				that.game.onKamikazeOutOfScreen(that);

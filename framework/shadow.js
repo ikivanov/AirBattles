@@ -14,6 +14,10 @@ define(["framework/sprite", "../consts"], function(Sprite, consts) {
 
 			that.zIndex = 19;
 
+			that.offsetX = config.offsetX;
+			that.offsetY = config.offsetY;
+			that.owner = config.owner;
+
 			that.isNonPlayable = true;
 			that.__type = consts.SpriteType.Shadow;
 		}
@@ -24,7 +28,8 @@ define(["framework/sprite", "../consts"], function(Sprite, consts) {
 
 		render() {
 			let that = this,
-				ctx = that.context;
+				ctx = that.context,
+				angle = that.owner.angle;
 
 			ctx.save();
 			ctx.globalAlpha = 0.3;
@@ -32,7 +37,12 @@ define(["framework/sprite", "../consts"], function(Sprite, consts) {
 			let half_width = that.image.width / 2,
 				half_height = that.image.height / 2;
 
+			if (angle !== 0) {
+				ctx.rotate((angle * Math.PI) / 180);
+			}
+
 			ctx.scale(0.55, 0.55);
+
 			ctx.drawImage(that.image, 0, 0);
 			ctx.restore();
 		}
