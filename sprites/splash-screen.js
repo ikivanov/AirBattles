@@ -67,9 +67,10 @@ define(["../framework/image-manager", "../framework/sprite"], function(ImageMana
 
 			ctx.font = "16px Arial";
 			ctx.fillStyle = "yellow";
-			ctx.fillText("Move left: A or " + String.fromCharCode(parseInt(2190, 16)), 25, 475);
-			ctx.fillText("Move right: D or " + String.fromCharCode(parseInt(2192, 16)), 25, 500);
-			ctx.fillText("Fire: Space", 25, 525);
+			ctx.fillText("Move left: A or " + String.fromCharCode(parseInt(2190, 16)), 25, 450);
+			ctx.fillText("Move right: D or " + String.fromCharCode(parseInt(2192, 16)), 25, 475);
+			ctx.fillText("Fire: Space", 25, 500);
+			ctx.fillText("Drop bomb: B", 25, 525);
 			ctx.fillText("Pause Game: P", 25, 550);
 			ctx.fillText("Resume Game: S", 25, 575);
 		}

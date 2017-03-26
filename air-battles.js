@@ -1,5 +1,5 @@
-define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "sprites/player-damage-effect", "consts"],
-	function(Game, SplashScreen, Label, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, consts) {
+define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "sprites/player-damage-effect", "sprites/player-bomb-effect", "consts"],
+	function(Game, SplashScreen, Label, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, PlayerBombEffect, consts) {
 	const
 		PLAYER_MISSILE_VELOCITY = -600,
 		WIDTH = 600,
@@ -170,10 +170,35 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 			that.addChild(new PlayerDamageEffect());
 		}
 
+		onPlayerBombEffectDone(effect) {
+			let that = this;
+
+			that.removeChild(effect);
+		}
+
+		runPlayerBombEffect() {
+			let that = this;
+
+			that.addChild(new PlayerBombEffect());
+		}
+
 		onPlayerDamageEffectDone(effect) {
 			let that = this;
 
 			that.removeChild(effect);
+		}
+
+		onBombDropped() {
+			let that = this,
+				sprites = that.sprites.filter(sprite => sprite.__type === consts.SpriteType.Fighter ||
+															sprite.__type === consts.SpriteType.Kamikaze ||
+															sprite.__type === consts.SpriteType.Missile);
+
+			that.runPlayerBombEffect();
+
+			for (let i = 0; i < sprites.length; i++) {
+				sprites[i].destroy();
+			}
 		}
 
 		isLevelCompleted() {

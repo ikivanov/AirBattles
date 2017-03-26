@@ -69,12 +69,18 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				that.lives--;
 
 				if (that.lives === 0) {
-					that.game.updateScores(that);
-					that.game.removeChild(that);
-
-					that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+					that.destroy();
 				}
 			}
+		}
+
+		destroy() {
+			let that = this;
+
+			that.game.updateScores(that);
+			that.game.removeChild(that);
+
+			that.game.addChild(new Explosion({ x: that.x, y: that.y }));
 		}
 	}
 

@@ -49,6 +49,12 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 		onCollidedWith(sprite) {
 			let that = this;
 
+			that.destroy();
+		}
+
+		destroy() {
+			let that = this;
+
 			that.game.removeChild(that);
 		}
 	}

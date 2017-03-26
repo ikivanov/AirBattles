@@ -42,6 +42,8 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 			that.zIndex = 20;
 			that.__type = consts.SpriteType.Player;
 
+			that.lastBombDropped = Date.now();
+
 			that.shadow = new Shadow({
 				x: that.x + SHADOW_OFFSET_X,
 				y: that.y + SHADOW_OFFSET_Y,
@@ -51,6 +53,8 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				zIndex: SHADOW_ZINDEX,
 				owner: that
 			});
+
+			that.bombs = 3;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
@@ -98,7 +102,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				that.updateShadow(that.x, that.y);
 			}
 
-			if (keyboard.keys.Space === true && that._canFire()) {
+			if (keyboard.keys.Space && that._canFire()) {
 				let centerX = Math.floor(that.x + WIDTH / 2);
 
 				if (that.doubleFire) {
@@ -107,6 +111,12 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				} else {
 					that.game.onMissileLaunched(centerX, that.y);
 				}
+			}
+
+			if (keyboard.keys.KeyB && that.bombs > 0 && (Date.now() - that.lastBombDropped) > 1000) {
+				that.game.onBombDropped();
+				that.bombs--;
+				that.lastBombDropped = Date.now();
 			}
 		}
 
@@ -120,9 +130,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				that.lives--;
 
 				if (that.lives === 0) {
-					that.game.removePlayer(that);
-
-					that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+					that.destroy();
 				} else {
 					that.game.runPlayerDamageEffect();
 				}
@@ -131,6 +139,14 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 			if (type === consts.SpriteType.PowerUp2xBasic) {
 				that.doubleFire = true;
 			}
+		}
+
+		destroy() {
+			let that = this;
+
+			that.game.removeChild(that);
+
+			that.game.addChild(new Explosion({ x: that.x, y: that.y }));
 		}
 
 		_canFire() {

@@ -77,6 +77,9 @@ define(["framework/image-manager"], function(ImageManager) {
 
 			return { x: that.x, y: that.y, width: that.width, height: that.height };
 		}
+
+		destroy() {
+		}
 	}
 
 	return Sprite;
