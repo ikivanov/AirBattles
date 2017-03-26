@@ -65,7 +65,7 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 
 			that.game.addChild(new Background({
 				intialX: 0,
-				intialY: 5743,
+				intialY: 5354,
 				velocityY: -25,
 				imageFilename: "images/level1-background.jpg"
 			}));
