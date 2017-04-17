@@ -35,7 +35,7 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 			if (that.angle < 360) {
 				that.angle++;
 			} else {
-				that.angle = 0;
+				that.angle = 1;
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);

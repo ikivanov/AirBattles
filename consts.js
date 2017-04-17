@@ -9,7 +9,8 @@ define([], function() {
 			Player: "Player",
 			Statistics: "Statistics",
 			PowerUp2xBasic: "PowerUp2xBasic",
-			Shadow: "Shadow"
+			Shadow: "Shadow",
+			Turret: "Turret"
 		}
 	};
 

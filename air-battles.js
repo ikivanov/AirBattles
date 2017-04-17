@@ -164,6 +164,12 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 			that.removeChild(powerUp);
 		}
 
+		onTurretOutOfScreen(turret) {
+			let that = this;
+
+			that.removeChild(turret);
+		}
+
 		runPlayerDamageEffect() {
 			let that = this;
 
