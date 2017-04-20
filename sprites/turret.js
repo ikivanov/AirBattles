@@ -2,7 +2,7 @@ define(["../framework/sprite", "../sprites/missile", "../consts"], function(Spri
 	const IMAGE_FILENAME = "images/turret.png",
 		WIDTH = 32,
 		HEIGHT = 40,
-		FIRE_INTERVAL = 1000,
+		FIRE_INTERVAL = 2500,
 		SPEED_X = 0,
 		SPEED_Y = 25,
 		MISSILE_VELOCITY = 400;
@@ -42,25 +42,22 @@ define(["../framework/sprite", "../sprites/missile", "../consts"], function(Spri
 		_calculateAngle() {
 			let that = this,
 				player = that.game.player,
-				oppositeCateteLength = player.x - that.x,
-				adjecentCateteLength = player.y - that.y,
+				oppositeCateteLength = Math.abs(player.x - that.x),
+				adjecentCateteLength = Math.abs(player.y - that.y),
 				hypotenuseLength = Math.sqrt(oppositeCateteLength * oppositeCateteLength + adjecentCateteLength * adjecentCateteLength),
 				sin = oppositeCateteLength / hypotenuseLength,
 				angle = Math.asin(sin) * 180 / Math.PI;
 
-			if (player.y > that.y) {
-				if (angle < 0) {
-					angle = Math.abs(angle);
-				} else {
-					angle = 360 - angle;
-				}
+			//angle in [0..90] -> [0..360]
+			if (player.x < that.x && player.y < that.y) {
+				angle = 180 - angle;
 			}
 
-			if (player.y < that.y) {
-				if (angle < 0) {
-					angle = 180 - Math.abs(angle);
+			if (player.x > that.x) {
+				if (player.y < that.y) {
+					angle += 180;
 				} else {
-					angle = 180 + angle;
+					angle = 360 - angle;
 				}
 			}
 
@@ -83,15 +80,18 @@ define(["../framework/sprite", "../sprites/missile", "../consts"], function(Spri
 
 		attack() {
 			let that = this,
-				now = Date.now();
+				now = Date.now(),
+				x = this.x + (25 * Math.cos((this.angle + 90) * Math.PI / 180)),
+				y = this.y + (25 * Math.sin((this.angle + 90) * Math.PI / 180));
 
 			if (now - that.lastFireTime > that.fireInterval) {
 				that.game.addChild(new Missile({
-					velocityY: MISSILE_VELOCITY,
-					x : that.x + WIDTH / 2,
-					y: that.y + HEIGHT + 1,
-					color: "gold",
-					owner: that
+					x,
+					y,
+					owner: that,
+					angle: that.angle + 90,
+					velocityX: 250,
+					velocityY: 250
 				}));
 				that.lastFireTime = now;
 			}

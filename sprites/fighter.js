@@ -73,9 +73,10 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/
 			if (now - that.lastFireTime > that.fireInterval) {
 				that.game.addChild(new Missile({
 					velocityY: MISSILE_VELOCITY,
-					x : that.x + WIDTH / 2,
+					x : that.x,
 					y: that.y + HEIGHT + 1,
 					color: "gold",
+					angle: 90,
 					owner: that
 				}));
 				that.lastFireTime = now;
