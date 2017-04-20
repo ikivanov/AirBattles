@@ -1,5 +1,5 @@
-define(["framework/utils", "sprites/background", "sprites/player", "sprites/fighter", "sprites/kamikaze", "sprites/kamikaze2", "sprites/power-up-2x-basic", "consts"],
-	function(Utils, Background, Player, Fighter, Kamikaze, Kamikaze2, PowerUp2xBasic, consts) {
+define(["framework/utils", "sprites/background", "sprites/player", "sprites/fighter", "sprites/kamikaze", "sprites/kamikaze2", "sprites/power-up-2x-basic", "sprites/turret", "consts"],
+	function(Utils, Background, Player, Fighter, Kamikaze, Kamikaze2, PowerUp2xBasic, Turret, consts) {
 	const MAX_LEVEL = 4;
 
 	class BaseLevel {
@@ -58,17 +58,30 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 			this.intervalBetweenFighterLaunches = 250;
 			this.fighterLauchesMinIntervalValue = 1000;
 			this.fighterLauchesMaxIntervalValue = 2000;
+			this.turretCoords = [
+				{ x: 300, y: 5054 },
+				{ x: 70, y: 4654 },
+				{ x: 180, y: 3960 },
+				{ x: 445, y: 3965 },
+				{ x: 515, y: 3395 },
+				{ x: 190, y: 3230 },
+				{ x: 580, y: 2690 },
+				{ x: 430, y: 2180 },
+				{ x: 235, y: 1570 },
+			];
 		}
 
 		createBackground() {
 			let that = this;
 
-			that.game.addChild(new Background({
+			that.background = new Background({
 				intialX: 0,
 				intialY: 5354,
 				velocityY: -25,
 				imageFilename: "images/level1-background.jpg"
-			}));
+			});
+
+			that.game.addChild(that.background);
 		}
 
 		loadMore() {
@@ -78,6 +91,7 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 			that.launchKamikaze();
 			that.launchKamikaze2();
 			that.dropPowerUp();
+			that.createTurrets();
 		}
 
 
@@ -151,6 +165,23 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 				}));
 				that.powerUpDroped = true;
 			}
+		}
+
+		createTurrets() {
+			this.turretCoords.forEach(c => {
+				if (c.created) {
+					return;
+				}
+
+				if (this.background.y >= c.y && this.background.y - 700 <= c.y) {
+					this.game.addChild(new Turret({
+						x: c.x,
+						y: 600 - (this.background.y - c.y)
+					}));
+
+					c.created = true;
+				}
+			});
 		}
 	}
 

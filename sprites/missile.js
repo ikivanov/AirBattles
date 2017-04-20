@@ -66,6 +66,11 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 		onCollidedWith(sprite) {
 			let that = this;
 
+			//todo: introduce Ground sprites => if sprites is ground...
+			if (sprite.__type === consts.SpriteType.Turret) {
+				return;
+			}
+
 			that.destroy();
 		}
 

@@ -1,4 +1,4 @@
-define(["../framework/sprite", "../sprites/missile", "../consts"], function(Sprite, Missile, consts) {
+define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/utils"], function(Sprite, Missile, consts, utils) {
 	const IMAGE_FILENAME = "images/turret.png",
 		WIDTH = 32,
 		HEIGHT = 40,
@@ -32,7 +32,7 @@ define(["../framework/sprite", "../sprites/missile", "../consts"], function(Spri
 			that.scoreBonus = 10;
 			that.lives = config.lives !== undefined ? config.lives : 1;
 
-			that.fireInterval = config.fireInterval !== undefined ? config.fireInterval : FIRE_INTERVAL;
+			that.fireInterval = config.fireInterval !== undefined ? config.fireInterval : utils.randomRange(2500, 5000);
 			that.lastFireTime = Date.now();
 
 			that.zIndex = 2;
