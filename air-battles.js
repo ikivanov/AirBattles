@@ -1,10 +1,11 @@
-define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "sprites/player-damage-effect", "sprites/player-bomb-effect", "consts"],
-	function(Game, SplashScreen, Label, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, PlayerBombEffect, consts) {
+define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/statistics", "framework/fps-counter", "levels", "sprites/missile", "sprites/player-damage-effect", "sprites/player-bomb-effect", "sprites/bomb-explosion", "consts", "framework/utils"],
+	function(Game, SplashScreen, Label, Statistics, FPSCounter, LevelFactory, Missile, PlayerDamageEffect, PlayerBombEffect, BombExplosion, consts, utils) {
 	const
 		PLAYER_MISSILE_VELOCITY = -600,
 		WIDTH = 600,
 		HEIGHT = 600,
-		MAX_LEVEL = 4;
+		MAX_LEVEL = 4,
+		BOMB_RADIUS = 100;
 
 	class AirBattles extends Game {
 		static get Width() {
@@ -196,15 +197,24 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 
 		onBombDropped() {
 			let that = this,
-				sprites = that.sprites.filter(sprite => sprite.__type === consts.SpriteType.Fighter ||
-															sprite.__type === consts.SpriteType.Kamikaze ||
-															sprite.__type === consts.SpriteType.Missile);
+				sprites = that.sprites.filter(sprite => sprite.__type === consts.SpriteType.Turret),
+				exposionArea = {
+					x: that.player.x + that.player.width / 2,
+					y: that.player.y + that.player.height / 2,
+					radius: BOMB_RADIUS
+				};
 
 			that.runPlayerBombEffect();
+			that.addChild(new BombExplosion({
+				x: that.player.x + that.player.width - that.player.width / 2,
+				y: that.player.y + that.player.height - that.player.height / 2}));
 
-			for (let i = 0; i < sprites.length; i++) {
-				sprites[i].destroy();
-			}
+			sprites.forEach(sprite => {
+				let spriteRect = { x: sprite.x, y: sprite.y, width: sprite.width, height: sprite.height };
+				if (utils.hasCircleRectangleCollision(exposionArea, spriteRect)) {
+					sprite.destroy();
+				}
+			});
 		}
 
 		isLevelCompleted() {

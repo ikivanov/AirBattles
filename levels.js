@@ -52,12 +52,12 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 			this.powerUpDroped = false;
 			this.lastKamikazeLaunched = Date.now();
 			this.lastKamikaze2Launched = Date.now();
-			this.intervalBetweenKamikazeLaunches = 5000;
-			this.intervalBetweenKamikaze2Launches = 7500;
+			this.intervalBetweenKamikazeLaunches = 10000;
+			this.intervalBetweenKamikaze2Launches = 15000;
 			this.lastFighterLaunched = Date.now();
-			this.intervalBetweenFighterLaunches = 250;
-			this.fighterLauchesMinIntervalValue = 1000;
-			this.fighterLauchesMaxIntervalValue = 2000;
+			this.intervalBetweenFighterLaunches = 5000;
+			this.fighterLauchesMinIntervalValue = 5000;
+			this.fighterLauchesMaxIntervalValue = 10000;
 			this.turretCoords = [
 				{ x: 300, y: 5054 },
 				{ x: 70, y: 4654 },

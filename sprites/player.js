@@ -13,7 +13,8 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 		LIVES = 3,
 		SHADOW_ZINDEX = 19,
 		SHADOW_OFFSET_X = -25,
-		SHADOW_OFFSET_Y = 35;
+		SHADOW_OFFSET_Y = 35,
+		BOMBS_COUNT = 30;
 
 	class Player extends Sprite {
 		static get Width() {
@@ -54,7 +55,7 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				owner: that
 			});
 
-			that.bombs = 3;
+			that.bombs = BOMBS_COUNT;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {

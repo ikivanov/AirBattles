@@ -1,5 +1,6 @@
-define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/utils"], function(Sprite, Missile, consts, utils) {
+define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/utils", "framework/image-manager"], function(Sprite, Missile, consts, utils, ImageManager) {
 	const IMAGE_FILENAME = "images/turret.png",
+		IMAGE_FILENAME_DESTROYED = "images/turret-destroyed.png",
 		WIDTH = 32,
 		HEIGHT = 40,
 		FIRE_INTERVAL = 2500,
@@ -67,13 +68,17 @@ define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/
 		update (lastFrameEllapsedTime, keyboard) {
 			let that = this;
 
-			that.angle = that._calculateAngle();
-
 			if (that.y > that.game.height) {
 				that.game.onTurretOutOfScreen(that);
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);
+
+			if (that.isDestoyed) {
+				return;
+			}
+
+			that.angle = that._calculateAngle();
 
 			that.attack();
 		}
@@ -97,26 +102,14 @@ define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/
 			}
 		}
 
-		onCollidedWith(sprite) {
-			let that = this,
-				type = sprite.__type;
-
-			if (type === consts.SpriteType.Missile) {
-				that.lives--;
-
-				if (that.lives === 0) {
-					that.destroy();
-				}
-			}
-		}
-
 		destroy() {
 			let that = this;
 
 			that.isDestoyed = true;
 
 			that.game.updateScores(that);
-			//TODO: show destroyed image
+
+			that.image = ImageManager.getImage(IMAGE_FILENAME_DESTROYED);
 		}
 	}
 

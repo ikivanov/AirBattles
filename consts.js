@@ -3,6 +3,7 @@ define([], function() {
 		SpriteType: {
 			Background: "Background",
 			Explosion: "Explosion",
+			BombExplosion: "BombExplosion",
 			Fighter: "Fighter",
 			Kamikaze: "Kamikaze",
 			Missile: "Missile",
