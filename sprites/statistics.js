@@ -9,39 +9,35 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 			config.isNonPlayable = true;
 			super(config);
 
-			let that = this;
+			this.lives = 0;
+			this.level = 0;
+			this.scores = 0;
+			this.bombs = 0;
 
-			that.lives = 0;
-			that.level = 0;
-			that.scores = 0;
-			that.bombs = 0;
-
-			that.zIndex = 10;
-			that.__type = consts.SpriteType.Statistics;
+			this.zIndex = 10;
+			this.__type = consts.SpriteType.Statistics;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this,
-				player = that.game.player;
+			let player = this.game.player;
 
-			that.lives = that.game.player ? that.game.player.lives : 0;
-			that.level = that.game.level;
-			that.scores = that.game.scores;
-			that.bombs = player ? player.bombs : 0;
+			this.lives = this.game.player ? this.game.player.lives : 0;
+			this.level = this.game.level;
+			this.scores = this.game.scores;
+			this.bombs = player ? player.bombs : 0;
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context;
+			let ctx = this.context;
 
 			ctx.font = "14px Arial";
 			ctx.fillStyle = "white";
 			ctx.textAlign = "left";
 
-			ctx.fillText(`Lives: ${that.lives}`, that.x, that.y);
-			ctx.fillText(`Level: ${that.level}`, that.x + LEVEL_OFFSET, that.y);
-			ctx.fillText(`Scores: ${that.scores}`, that.x + SCORES_OFFSET, that.y);
-			ctx.fillText(`Bombs: ${that.bombs}`, that.x + BOMBS_OFFSET, that.y);
+			ctx.fillText(`Lives: ${this.lives}`, this.x, this.y);
+			ctx.fillText(`Level: ${this.level}`, this.x + LEVEL_OFFSET, this.y);
+			ctx.fillText(`Scores: ${this.scores}`, this.x + SCORES_OFFSET, this.y);
+			ctx.fillText(`Bombs: ${this.bombs}`, this.x + BOMBS_OFFSET, this.y);
 		}
 	}
 

@@ -1,47 +1,42 @@
 define(["framework/image-manager"], function(ImageManager) {
 	class Sprite {
 		constructor(config) {
-			let that = this;
+			this.context = config.context || null;
+			this.game = null;
+			this.x = config.x;
+			this.y = config.y;
+			this.width = config.width;
+			this.height = config.height;
+			this.angle = config.angle !== undefined ? config.angle : 0;
+			this.zIndex = config.zIndex !== undefined ? config.zIndex : 0;
 
-			that.context = config.context || null;
-			that.game = null;
-			that.x = config.x;
-			that.y = config.y;
-			that.width = config.width;
-			that.height = config.height;
-			that.angle = config.angle !== undefined ? config.angle : 0;
-			that.zIndex = config.zIndex !== undefined ? config.zIndex : 0;
-
-			that.image = null;
+			this.image = null;
 			if (config.imageFilename) {
-				that.image = ImageManager.getImage(config.imageFilename);
+				this.image = ImageManager.getImage(config.imageFilename);
 			}
 
-			that.parent = null;
-			that.velocityX = config.velocityX !== undefined ? config.velocityX : 0;
-			that.velocityY = config.velocityY !== undefined ? config.velocityY : 0;
-			that.isVisible = config.isVisible !== undefined ? config.isVisible : true;
-			that.isDestoyed = false;
-			that.isNonPlayable = config.isNonPlayable !== undefined ? config.isNonPlayable : false;
-			that.shadow = null;
+			this.parent = null;
+			this.velocityX = config.velocityX !== undefined ? config.velocityX : 0;
+			this.velocityY = config.velocityY !== undefined ? config.velocityY : 0;
+			this.isVisible = config.isVisible !== undefined ? config.isVisible : true;
+			this.isDestoyed = false;
+			this.isNonPlayable = config.isNonPlayable !== undefined ? config.isNonPlayable : false;
+			this.shadow = null;
 
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this;
+			let distanceX = this.velocityX * lastFrameEllapsedTime,
+				distanceY = this.velocityY * lastFrameEllapsedTime;
 
-			let distanceX = that.velocityX * lastFrameEllapsedTime,
-				distanceY = that.velocityY * lastFrameEllapsedTime;
+			this.x += distanceX;
+			this.y += distanceY;
 
-			that.x += distanceX;
-			that.y += distanceY;
-
-			that.updateShadow(that.x, that.y);
+			this.updateShadow(this.x, this.y);
 		}
 
 		updateShadow(x, y) {
-			let that = this,
-				shadow = that.shadow;
+			let shadow = this.shadow;
 
 			if (!shadow) {
 				return;
@@ -52,18 +47,17 @@ define(["framework/image-manager"], function(ImageManager) {
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context;
+			let ctx = this.context;
 
-			if (that.image) {
-				if (that.angle !== 0) {
+			if (this.image) {
+				if (this.angle !== 0) {
 					ctx.save();
-					ctx.translate(that.x, that.y);
-					ctx.rotate((that.angle * Math.PI) / 180);
-					ctx.drawImage(that.image, -that.width / 2, -that.height / 2);
+					ctx.translate(this.x, this.y);
+					ctx.rotate((this.angle * Math.PI) / 180);
+					ctx.drawImage(this.image, -this.width / 2, -this.height / 2);
 					ctx.restore();
 				} else {
-					ctx.drawImage(that.image, that.x, that.y);
+					ctx.drawImage(this.image, this.x, this.y);
 				}
 			}
 		}
@@ -73,9 +67,7 @@ define(["framework/image-manager"], function(ImageManager) {
 		}
 
 		getRect() {
-			let that = this;
-
-			return { x: that.x, y: that.y, width: that.width, height: that.height };
+			return { x: this.x, y: this.y, width: this.width, height: this.height };
 		}
 
 		destroy() {

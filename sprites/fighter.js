@@ -30,79 +30,72 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../sprites/
 
 			super(config);
 
-			let that = this;
-			that.initialX = that.x;
-			that.velocityX = SPEED_X;
-			that.velocityY = SPEED_Y;
-			that.angle = 180;
-			that.fireInterval = config.fireInterval !== undefined ? config.fireInterval : FIRE_INTERVAL;
-			that.lastFireTime = Date.now();
-			that.scoreBonus = 10;
-			that.lives = config.lives !== undefined ? config.lives : 1;
+			this.initialX = this.x;
+			this.velocityX = SPEED_X;
+			this.velocityY = SPEED_Y;
+			this.angle = 180;
+			this.fireInterval = config.fireInterval !== undefined ? config.fireInterval : FIRE_INTERVAL;
+			this.lastFireTime = Date.now();
+			this.scoreBonus = 10;
+			this.lives = config.lives !== undefined ? config.lives : 1;
 
-			that.zIndex = 20;
-			that.__type = consts.SpriteType.Fighter;
+			this.zIndex = 20;
+			this.__type = consts.SpriteType.Fighter;
 
-			that.shadow = new Shadow({
-				x: that.x + SHADOW_OFFSET_X,
-				y: that.y + SHADOW_OFFSET_Y,
+			this.shadow = new Shadow({
+				x: this.x + SHADOW_OFFSET_X,
+				y: this.y + SHADOW_OFFSET_Y,
 				offsetX: SHADOW_OFFSET_X,
 				offsetY: SHADOW_OFFSET_Y,
 				imageFilename: SHADOW_IMAGE_FILENAME,
 				zIndex: SHADOW_ZINDEX,
-				owner: that
+				owner: this
 			});
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
-			if (that.y > that.game.height) {
-				that.game.onFighterOutOfScreen(that);
+			if (this.y > this.game.height) {
+				this.game.onFighterOutOfScreen(this);
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);
 
-			that.attack();
+			this.attack();
 		}
 
 		attack() {
-			let that = this,
-				now = Date.now();
+			let now = Date.now();
 
-			if (now - that.lastFireTime > that.fireInterval) {
-				that.game.addChild(new Missile({
+			if (now - this.lastFireTime > this.fireInterval) {
+				this.game.addChild(new Missile({
 					velocityY: MISSILE_VELOCITY,
-					x : that.x,
-					y: that.y + HEIGHT + 1,
+					x : this.x,
+					y: this.y + HEIGHT + 1,
 					color: "gold",
 					angle: 90,
-					owner: that
+					owner: this
 				}));
-				that.lastFireTime = now;
+				this.lastFireTime = now;
 			}
 		}
 
 		onCollidedWith(sprite) {
-			let that = this,
-				type = sprite.__type;
+			let type = sprite.__type;
 
 			if (type === consts.SpriteType.Missile || type === consts.SpriteType.Player) {
-				that.lives--;
+				this.lives--;
 
-				if (that.lives === 0) {
-					that.destroy();
+				if (this.lives === 0) {
+					this.destroy();
 				}
 			}
 		}
 
 		destroy() {
-			let that = this;
+			this.game.updateScores(this);
+			this.game.removeChild(this);
 
-			that.game.updateScores(that);
-			that.game.removeChild(that);
-
-			that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+			this.game.addChild(new Explosion({ x: this.x, y: this.y }));
 		}
 	}
 

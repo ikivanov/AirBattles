@@ -20,40 +20,34 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 
 			super(config);
 
-			let that = this;
+			this.velocityY = config.velocityY !== undefined ? config.velocityY : VELOCITY_Y;
+			this.angle = 0;
 
-			that.velocityY = config.velocityY !== undefined ? config.velocityY : VELOCITY_Y;
-			that.angle = 0;
-
-			that.zIndex = 30;
-			that.__type = consts.SpriteType.PowerUp2xBasic;
+			this.zIndex = 30;
+			this.__type = consts.SpriteType.PowerUp2xBasic;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
-			if (that.angle < 360) {
-				that.angle++;
+			if (this.angle < 360) {
+				this.angle++;
 			} else {
-				that.angle = 1;
+				this.angle = 1;
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);
 
-			if (that.x <= 0 || that.x + that.width >= that.game.width ||
-				that.y + that.height > that.game.height) {
-				that.game.onPowerUpOutOfScreen(that);
+			if (this.x <= 0 || this.x + this.width >= this.game.width ||
+				this.y + this.height > this.game.height) {
+				this.game.onPowerUpOutOfScreen(this);
 			}
 		}
 
 		onCollidedWith(sprite) {
-			let that = this;
-
 			if (sprite.__type !== consts.SpriteType.Player) {
 				return;
 			}
 
-			that.game.removeChild(that);
+			this.game.removeChild(this);
 		}
 	}
 

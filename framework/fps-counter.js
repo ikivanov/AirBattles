@@ -5,30 +5,27 @@ define(["framework/label"], function(Label) {
 		constructor(config) {
 			super(config);
 
-			let that = this;
+			this.fps = 0;
+			this.oldTime = Date.now();
+			this.framesCounter = 0;
+			this.isNonPlayable = true;
 
-			that.fps = 0;
-			that.oldTime = Date.now();
-			that.framesCounter = 0;
-			that.isNonPlayable = true;
-
-			that.__type = "fpscounter";
+			this.__type = "fpscounter";
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this,
-				now = Date.now(),
-				diff = now - that.oldTime;
+			let now = Date.now(),
+				diff = now - this.oldTime;
 
 			if (diff < FPS_CALCULATION_TIME_INTERVAL) {
-				that.framesCounter++;
+				this.framesCounter++;
 			} else {
-				that.fps = that.framesCounter;
-				that.framesCounter = 0;
-				that.oldTime = Date.now();
+				this.fps = this.framesCounter;
+				this.framesCounter = 0;
+				this.oldTime = Date.now();
 			}
 
-			that.text = `fps: ${that.fps}`;
+			this.text = `fps: ${this.fps}`;
 		}
 	}
 

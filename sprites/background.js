@@ -10,15 +10,12 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 				isNonPlayable: true
 			});
 
-			let that = this;
-			that.__type = consts.SpriteType.Background;
+			this.__type = consts.SpriteType.Background;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
-			if (that.y <= 0) {
-				that.y = 0;
+			if (this.y <= 0) {
+				this.y = 0;
 				return;
 			}
 
@@ -26,12 +23,11 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context,
-				width = that.game.canvas.width,
-				height = that.game.canvas.height;
+			let ctx = this.context,
+				width = this.game.canvas.width,
+				height = this.game.canvas.height;
 
-			ctx.drawImage(that.image, that.x, that.y, width, height, 0, 0, width, height);
+			ctx.drawImage(this.image, this.x, this.y, width, height, 0, 0, width, height);
 		}
 	}
 

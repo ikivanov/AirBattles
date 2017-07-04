@@ -34,28 +34,26 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				imageFilename: IMAGE_FILENAME
 			});
 
-			let that = this;
+			this.doubleFire = false;
+			this.lastFireTime = new Date();
+			this.lives = LIVES;
 
-			that.doubleFire = false;
-			that.lastFireTime = new Date();
-			that.lives = LIVES;
+			this.zIndex = 20;
+			this.__type = consts.SpriteType.Player;
 
-			that.zIndex = 20;
-			that.__type = consts.SpriteType.Player;
+			this.lastBombDropped = Date.now();
 
-			that.lastBombDropped = Date.now();
-
-			that.shadow = new Shadow({
-				x: that.x + SHADOW_OFFSET_X,
-				y: that.y + SHADOW_OFFSET_Y,
+			this.shadow = new Shadow({
+				x: this.x + SHADOW_OFFSET_X,
+				y: this.y + SHADOW_OFFSET_Y,
 				offsetX: SHADOW_OFFSET_X,
 				offsetY: SHADOW_OFFSET_Y,
 				imageFilename: SHADOW_IMAGE_FILENAME,
 				zIndex: SHADOW_ZINDEX,
-				owner: that
+				owner: this
 			});
 
-			that.bombs = BOMBS_COUNT;
+			this.bombs = BOMBS_COUNT;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
@@ -63,99 +61,94 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 				return;
 			}
 
-			let that = this,
-				distanceX = SPEED_X * lastFrameEllapsedTime,
+			let distanceX = SPEED_X * lastFrameEllapsedTime,
 				distanceY = SPEED_Y * lastFrameEllapsedTime;
 
 			if (keyboard.keys.ArrowLeft || keyboard.keys.KeyA) {
-				if (that.x - distanceX < MIN_X) {
-					that.x = MIN_X;
+				if (this.x - distanceX < MIN_X) {
+					this.x = MIN_X;
 				} else {
-					that.x -= distanceX;
+					this.x -= distanceX;
 				}
 			}
 
 			if (keyboard.keys.ArrowRight || keyboard.keys.KeyD) {
-				if (that.x + distanceX > MAX_X) {
-					that.x = MAX_X;
+				if (this.x + distanceX > MAX_X) {
+					this.x = MAX_X;
 				} else {
-					that.x += distanceX;
+					this.x += distanceX;
 				}
 			}
 
 			if (keyboard.keys.ArrowUp || keyboard.keys.KeyE) {
-				if (that.y - distanceY < MIN_Y) {
-					that.y = MIN_Y;
+				if (this.y - distanceY < MIN_Y) {
+					this.y = MIN_Y;
 				} else {
-					that.y -= distanceY;
+					this.y -= distanceY;
 				}
 			}
 
 			if (keyboard.keys.ArrowDown || keyboard.keys.KeyD) {
-				if (that.y + distanceY > MAX_Y) {
-					that.y = MAX_Y;
+				if (this.y + distanceY > MAX_Y) {
+					this.y = MAX_Y;
 				} else {
-					that.y += distanceY;
+					this.y += distanceY;
 				}
 			}
 
-			if (that.shadow) {
-				that.updateShadow(that.x, that.y);
+			if (this.shadow) {
+				this.updateShadow(this.x, this.y);
 			}
 
-			if (keyboard.keys.Space && that._canFire()) {
-				let centerX = Math.floor(that.x + WIDTH / 2);
+			if (keyboard.keys.Space && this._canFire()) {
+				let centerX = Math.floor(this.x + WIDTH / 2);
 
-				if (that.doubleFire) {
-					that.game.onMissileLaunched(centerX - 15, that.y);
-					that.game.onMissileLaunched(centerX + 15, that.y);
+				if (this.doubleFire) {
+					this.game.onMissileLaunched(centerX - 15, this.y);
+					this.game.onMissileLaunched(centerX + 15, this.y);
 				} else {
-					that.game.onMissileLaunched(centerX, that.y);
+					this.game.onMissileLaunched(centerX, this.y);
 				}
 			}
 
-			if (keyboard.keys.KeyB && that.bombs > 0 && (Date.now() - that.lastBombDropped) > 1000) {
-				that.game.onBombDropped();
-				that.bombs--;
-				that.lastBombDropped = Date.now();
+			if (keyboard.keys.KeyB && this.bombs > 0 && (Date.now() - this.lastBombDropped) > 1000) {
+				this.game.onBombDropped();
+				this.bombs--;
+				this.lastBombDropped = Date.now();
 			}
 		}
 
 		onCollidedWith(sprite) {
-			let that = this,
-				type = sprite.__type;
+			let type = sprite.__type;
 
 			if (type === consts.SpriteType.Missile ||
 				type === consts.SpriteType.Fighter ||
 				type === consts.SpriteType.Kamikaze) {
-				that.lives--;
+				this.lives--;
 
-				if (that.lives === 0) {
-					that.destroy();
+				if (this.lives === 0) {
+					this.destroy();
 				} else {
-					that.game.runPlayerDamageEffect();
+					this.game.runPlayerDamageEffect();
 				}
 			}
 
 			if (type === consts.SpriteType.PowerUp2xBasic) {
-				that.doubleFire = true;
+				this.doubleFire = true;
 			}
 		}
 
 		destroy() {
-			let that = this;
+			this.game.removeChild(this);
 
-			that.game.removeChild(that);
-
-			that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+			this.game.addChild(new Explosion({ x: this.x, y: this.y }));
 		}
 
 		_canFire() {
-			let that = this,
-				now = new Date();
+			let now = new Date();
 
-			if (now.getTime() - that.lastFireTime.getTime() > FIRE_INTERVAL) {
-				that.lastFireTime = now;
+			if (now.getTime() - this.lastFireTime.getTime() > FIRE_INTERVAL) {
+				this.lastFireTime = now;
 				return true;
 			}
 

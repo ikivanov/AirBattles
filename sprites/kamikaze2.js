@@ -29,73 +29,68 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 
 			super(config);
 
-			let that = this;
-			that.initialX = that.x;
-			that.velocityX = SPEED_X;
-			that.velocityY = SPEED_Y;
-			that.angle = 180;
-			that.scoreBonus = 10;
-			that.lives = config.lives !== undefined ? config.lives : 1;
-			that.isChasing = false;
+			this.initialX = this.x;
+			this.velocityX = SPEED_X;
+			this.velocityY = SPEED_Y;
+			this.angle = 180;
+			this.scoreBonus = 10;
+			this.lives = config.lives !== undefined ? config.lives : 1;
+			this.isChasing = false;
 
-			that.zIndex = 20;
-			that.__type = consts.SpriteType.Kamikaze;
+			this.zIndex = 20;
+			this.__type = consts.SpriteType.Kamikaze;
 
-			that.shadow = new Shadow({
-				x: that.x + SHADOW_OFFSET_X,
-				y: that.y + SHADOW_OFFSET_Y,
+			this.shadow = new Shadow({
+				x: this.x + SHADOW_OFFSET_X,
+				y: this.y + SHADOW_OFFSET_Y,
 				offsetX: SHADOW_OFFSET_X,
 				offsetY: SHADOW_OFFSET_Y,
 				imageFilename: SHADOW_IMAGE_FILENAME,
 				zIndex: SHADOW_ZINDEX,
-				owner: that
+				owner: this
 			});
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
-			let that = this,
-				player = that.game.player,
-				targetX = player ? player.x : that.x,
-				targetY = player ? player.y : that.game.Height;
+			let player = this.game.player,
+				targetX = player ? player.x : this.x,
+				targetY = player ? player.y : this.game.Height;
 
-			if (that.y <= 55) {
+			if (this.y <= 55) {
 				super.update(lastFrameEllapsedTime, keyboard);
-			} else if (that.y > 55 && targetY > that.y && !that.isChasing) {
-				that.isChasing = true;
-				that.distance = Math.sqrt(Math.pow(targetX - that.x, 2) + Math.pow(targetY - that.y, 2));
-				that.directionX = (targetX - that.x) / that.distance;
-				that.directionY = (targetY - that.y) / that.distance;
-			} else if (that.isChasing) {
-				that.x += that.directionX * SPEED_Y * lastFrameEllapsedTime;
-				that.y += that.directionY * SPEED_Y * lastFrameEllapsedTime;
-				that.updateShadow(that.x, that.y);
+			} else if (this.y > 55 && targetY > this.y && !this.isChasing) {
+				this.isChasing = true;
+				this.distance = Math.sqrt(Math.pow(targetX - this.x, 2) + Math.pow(targetY - this.y, 2));
+				this.directionX = (targetX - this.x) / this.distance;
+				this.directionY = (targetY - this.y) / this.distance;
+			} else if (this.isChasing) {
+				this.x += this.directionX * SPEED_Y * lastFrameEllapsedTime;
+				this.y += this.directionY * SPEED_Y * lastFrameEllapsedTime;
+				this.updateShadow(this.x, this.y);
 			}
 
-			if (that.x < 0 || that.x > that.game.width || that.y > that.game.height) {
-				that.game.onKamikazeOutOfScreen(that);
+			if (this.x < 0 || this.x > this.game.width || this.y > this.game.height) {
+				this.game.onKamikazeOutOfScreen(this);
 			}
 		}
 
 		onCollidedWith(sprite) {
-			let that = this,
-				type = sprite.__type;
+			let type = sprite.__type;
 
 			if (type === consts.SpriteType.Missile || type === consts.SpriteType.Player) {
-				that.lives--;
+				this.lives--;
 
-				if (that.lives === 0) {
-					that.destroy();
+				if (this.lives === 0) {
+					this.destroy();
 				}
 			}
 		}
 
 		destroy() {
-			let that = this;
+			this.game.updateScores(this);
+			this.game.removeChild(this);
 
-			that.game.updateScores(that);
-			that.game.removeChild(that);
-
-			that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+			this.game.addChild(new Explosion({ x: this.x, y: this.y }));
 		}
 	}
 

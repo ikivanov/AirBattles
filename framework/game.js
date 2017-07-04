@@ -1,42 +1,39 @@
 define(["framework/utils"], function(Utils) {
 	class Game {
 		constructor(config) {
-			let that = this;
+			this.canvas = config.canvas;
+			this.context = this.canvas.getContext("2d");
+			this.width = this.canvas.width;
+			this.height = this.canvas.height;
 
-			that.canvas = config.canvas;
-			that.context = that.canvas.getContext("2d");
-			that.width = that.canvas.width;
-			that.height = that.canvas.height;
-
-			document.addEventListener("keydown", that._onKeyDown.bind(that));
-			document.addEventListener("keyup", that._onKeyUp.bind(that));
+			document.addEventListener("keydown", this._onKeyDown.bind(this));
+			document.addEventListener("keyup", this._onKeyUp.bind(this));
 		}
 
 		init() {
-			let that = this,
-				splashScreen = that.getSplashScreen();
+			let splashScreen = this.getSplashScreen();
 
-			that.lastFrameTime = Date.now();
-			that.sprites = [];
+			this.lastFrameTime = Date.now();
+			this.sprites = [];
 
-			that.isPaused = false;
-			that.isGameOver = false;
+			this.isPaused = false;
+			this.isGameOver = false;
 
-			that.level = 1;
-			that.scores = 0;
+			this.level = 1;
+			this.scores = 0;
 
-			that.keyboard = { keys : { } };
+			this.keyboard = { keys : { } };
 
 			if (splashScreen) {
-				that.splashScreen = splashScreen;
-				that.addChild(that.splashScreen);
+				this.splashScreen = splashScreen;
+				this.addChild(this.splashScreen);
 			}
 
-			that.gameOverLabel = that.getGameOverLabel();
-			that.addChild(that.gameOverLabel);
+			this.gameOverLabel = this.getGameOverLabel();
+			this.addChild(this.gameOverLabel);
 
-			that.pauseLabel = that.getPauseLabel();
-			that.addChild(that.pauseLabel);
+			this.pauseLabel = this.getPauseLabel();
+			this.addChild(this.pauseLabel);
 		}
 
 		getSplashScreen() {
@@ -55,77 +52,68 @@ define(["framework/utils"], function(Utils) {
 		}
 
 		run() {
-			let that = this,
-				now = Date.now(),
-				lastFrameEllapsedTime = (now - that.lastFrameTime) / 1000.0;
+			let now = Date.now(),
+				lastFrameEllapsedTime = (now - this.lastFrameTime) / 1000.0;
 
-			if (that.isGameOver) {
-				that.gameOverLabel.render();
+			if (this.isGameOver) {
+				this.gameOverLabel.render();
 				return;
 			}
 
-			if (that.isPaused) {
-				that.pauseLabel.render();
+			if (this.isPaused) {
+				this.pauseLabel.render();
 				return;
 			}
 
-			that.update(lastFrameEllapsedTime, that.keyboard);
-			that.render();
+			this.update(lastFrameEllapsedTime, this.keyboard);
+			this.render();
 
-			that.createdOn = Date.now();
-			that.lastFrameTime = Date.now();
+			this.createdOn = Date.now();
+			this.lastFrameTime = Date.now();
 
-			requestAnimationFrame(that.run.bind(that));
+			requestAnimationFrame(this.run.bind(this));
 		}
 
 		start() {
-			let that = this;
-
-			if (!that.isGameOver && !that.isPaused) {
+			if (!this.isGameOver && !this.isPaused) {
 				return;
 			}
 
-			if (that.isGameOver) {
-				that.init();
+			if (this.isGameOver) {
+				this.init();
 			}
 
-			that.isGameOver = that.isPaused = false;
+			this.isGameOver = this.isPaused = false;
 
-			that.gameOverLabel.isVisible = false;
-			that.pauseLabel.isVisible = false;
+			this.gameOverLabel.isVisible = false;
+			this.pauseLabel.isVisible = false;
 
-			that.lastFrameTime = Date.now();
+			this.lastFrameTime = Date.now();
 
-			that.run();
+			this.run();
 		}
 
 		pause() {
-			let that = this;
-
-			that.pauseLabel.isVisible = true;
-			that.isPaused = true;
+			this.pauseLabel.isVisible = true;
+			this.isPaused = true;
 		}
 
 		gameOver() {
-			let that = this;
-
-			that.currentLevel = null;
-			that.gameOverLabel.isVisible = true;
-			that.isGameOver = true;
+			this.currentLevel = null;
+			this.gameOverLabel.isVisible = true;
+			this.isGameOver = true;
 		}
 
 		detectCollisions() {
-			let that = this;
-
-			for (let i = 0; i < that.sprites.length; i++) {
-				let sprite = that.sprites[i];
+			for (let i = 0; i < this.sprites.length; i++) {
+				let sprite = this.sprites[i];
 
 				if (sprite.isNonPlayable) {
 					continue;
 				}
 
-				for (let j = 0; j < that.sprites.length; j++) {
-					let sprite2 = that.sprites[j];
+				for (let j = 0; j < this.sprites.length; j++) {
+					let sprite2 = this.sprites[j];
 
 					if (sprite2.isNonPlayable || sprite2 === sprite) {
 						continue;
@@ -135,7 +123,7 @@ define(["framework/utils"], function(Utils) {
 					if (hasCollision) {
 						sprite.onCollidedWith(sprite2);
 						sprite2.onCollidedWith(sprite);
-						that.onCollisionDetected(sprite, sprite2);
+						this.onCollisionDetected(sprite, sprite2);
 					}
 				}
 			}
@@ -159,25 +147,23 @@ define(["framework/utils"], function(Utils) {
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
-			for (let i = 0; i < that.sprites.length; i++) {
-				let sprite = that.sprites[i];
+			for (let i = 0; i < this.sprites.length; i++) {
+				let sprite = this.sprites[i];
 				sprite.update(lastFrameEllapsedTime, keyboard);
 			}
 
-			that.onAfterUpdate(lastFrameEllapsedTime);
+			this.onAfterUpdate(lastFrameEllapsedTime);
 
-			that.detectCollisions();
+			this.detectCollisions();
 
-			if (that.currentLevel) {
-				if (that.checkGameOver()) {
-					that.gameOver();
+			if (this.currentLevel) {
+				if (this.checkGameOver()) {
+					this.gameOver();
 					return;
 				}
 
-				if (that.isLevelCompleted()) {
-					that.onLevelCompleted();
+				if (this.isLevelCompleted()) {
+					this.onLevelCompleted();
 				}
 			}
 		}
@@ -186,19 +172,18 @@ define(["framework/utils"], function(Utils) {
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context;
+			let ctx = this.context;
 
-			ctx.clearRect(0, 0, that.canvas.width, that.canvas.height);
+			ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-			for (let i = 0; i < that.sprites.length; i++) {
-				let sprite = that.sprites[i];
+			for (let i = 0; i < this.sprites.length; i++) {
+				let sprite = this.sprites[i];
 
 				if (!sprite.isVisible) {
 					continue;
 				}
 
-				that.sprites[i].render();
+				this.sprites[i].render();
 			}
 		}
 
@@ -207,20 +192,19 @@ define(["framework/utils"], function(Utils) {
 				return;
 			}
 
-			let that = this,
-				shadow = sprite.shadow;
+			let shadow = sprite.shadow;
 
-			that.sprites.push(sprite);
-			sprite.context = that.context;
-			sprite.game = that;
+			this.sprites.push(sprite);
+			sprite.context = this.context;
+			sprite.game = this;
 
 			if (shadow) {
-				that.sprites.push(shadow);
-				shadow.context = that.context;
-				shadow.game = that;
+				this.sprites.push(shadow);
+				shadow.context = this.context;
+				shadow.game = this;
 			}
 
-			that.sprites.sort((a, b) => a.zIndex - b.zIndex);
+			this.sprites.sort((a, b) => a.zIndex - b.zIndex);
 		}
 
 		addChildren(sprites) {
@@ -228,10 +212,8 @@ define(["framework/utils"], function(Utils) {
 				return;
 			}
 
-			let that = this;
-
 			for (let i = 0; i < sprites.length; i++) {
-				that.addChild(sprites[i]);
+				this.addChild(sprites[i]);
 			}
 		}
 
@@ -240,49 +222,46 @@ define(["framework/utils"], function(Utils) {
 				return;
 			}
 
-			let that = this,
-				index = that.sprites.indexOf(sprite),
+			let index = this.sprites.indexOf(sprite),
 				shadow = sprite.shadow;
 
 			if (index !== -1) {
-				that.sprites.splice(index, 1);
+				this.sprites.splice(index, 1);
 			}
 
 			if (!shadow) {
 				return;
 			}
 
-			index = that.sprites.indexOf(shadow);
+			index = this.sprites.indexOf(shadow);
 
 			if (index !== -1) {
-				that.sprites.splice(index, 1);
+				this.sprites.splice(index, 1);
 			}
 		}
 
 		_onKeyDown(e) {
-			let that = this,
-				code = e.code;
+			let code = e.code;
 
 			if (code === "KeyS") {
-				that.start();
+				this.start();
 			}
 
 			if (code === "KeyP") {
-				that.pause();
+				this.pause();
 			}
 
-			if (that.isGameOver || that.isPaused) {
+			if (this.isGameOver || this.isPaused) {
 				return;
 			}
 
-			that.keyboard.keys[code] = true;
+			this.keyboard.keys[code] = true;
 		}
 
 		_onKeyUp(e) {
-			let that = this,
-				code = e.code;
+			let code = e.code;
 
-			that.keyboard.keys[code] = false;
+			this.keyboard.keys[code] = false;
 		}
 	}
 

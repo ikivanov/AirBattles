@@ -19,9 +19,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		constructor(config) {
 			super(config);
 
-			let that = this;
-
-			that.init();
+			this.init();
 		}
 
 		getSplashScreen() {
@@ -29,26 +27,22 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		}
 
 		loadSprites() {
-			let that = this;
+			this.addChild(new Statistics({ x: 25, y: 25 }));
+			this.addChild(new FPSCounter({ x: 545, y: 25, zIndex: 10 }));
 
-			that.addChild(new Statistics({ x: 25, y: 25 }));
-			that.addChild(new FPSCounter({ x: 545, y: 25, zIndex: 10 }));
-
-			that.level = 1;
-			that.levelDescriptorCreated = new Date();
-			that.levelDescriptor = that.getLevelDescriptorLabel();
-			that.addChild(that.levelDescriptor);
+			this.level = 1;
+			this.levelDescriptorCreated = new Date();
+			this.levelDescriptor = this.getLevelDescriptorLabel();
+			this.addChild(this.levelDescriptor);
 		}
 
 		getLevelDescriptorLabel() {
-			let that = this;
-
 			return new Label({
-				text: `${that.currentLevel.name}. Loading...`,
+				text: `${this.currentLevel.name}. Loading...`,
 				x: 0,
 				y: 0,
-				width: that.canvas.width,
-				height: that.canvas.height,
+				width: this.canvas.width,
+				height: this.canvas.height,
 				color: "yellow",
 				size: 22,
 				backgroundColor: "black"
@@ -70,144 +64,115 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		}
 
 		cleanUpLevel() {
-			let that = this;
-
-			that.sprites = that.sprites.filter(sprite => sprite.isNonPlayable === true);
+			this.sprites = this.sprites.filter(sprite => sprite.isNonPlayable === true);
 		}
 
 		_removeCompletedExplosions() {
-			let that = this,
-				explosionsCompleted = that.sprites.filter(sprite => sprite.__type === consts.SpriteType.Explosion && sprite.isCompleted);
+			let explosionsCompleted = this.sprites.filter(sprite => sprite.__type === consts.SpriteType.Explosion && sprite.isCompleted);
 
 			if (explosionsCompleted && explosionsCompleted.length > 0) {
 				for (let i = 0; i < explosionsCompleted.length; i++) {
-					that.removeChild(explosionsCompleted[i]);
+					this.removeChild(explosionsCompleted[i]);
 				}
 			}
 		}
 
 		onSplashScreenNeedsRemoval(splashScreen) {
-			let that = this;
+			this.removeChild(splashScreen);
 
-			that.removeChild(splashScreen);
+			this.currentLevel = LevelFactory.create(this.level, { game: this });
 
-			that.currentLevel = LevelFactory.create(that.level, { game: that });
-
-			that.loadSprites();
-			that.start();
+			this.loadSprites();
+			this.start();
 		}
 
 		onAfterUpdate(lastFrameEllapsedTime) {
-			let that = this,
-				now = Date.now();
+			let now = Date.now();
 
-			that._removeCompletedExplosions();
+			this._removeCompletedExplosions();
 
-			if (that.levelDescriptor && now - that.levelDescriptorCreated.getTime() > 2000) {
-				that.removeChild(that.levelDescriptor);
-				that.levelDescriptor = null;
+			if (this.levelDescriptor && now - this.levelDescriptorCreated.getTime() > 2000) {
+				this.removeChild(this.levelDescriptor);
+				this.levelDescriptor = null;
 
-				that.currentLevel.load();
+				this.currentLevel.load();
 			}
 
-			if (!that.currentLevel || !that.player) {
+			if (!this.currentLevel || !this.player) {
 				return;
 			}
 
-			that.currentLevel.loadMore();
+			this.currentLevel.loadMore();
 		}
 
 		onLevelCompleted() {
-			let that = this;
-
-			if (that.level === MAX_LEVEL) {
-				that.gameOver();
+			if (this.level === MAX_LEVEL) {
+				this.gameOver();
 				return;
 			}
 
-			that.cleanUpLevel();
-			that.level++;
-			that.currentLevel = LevelFactory.create(that.level, { game: that });
-			that.currentLevel.load();
+			this.cleanUpLevel();
+			this.level++;
+			this.currentLevel = LevelFactory.create(this.level, { game: this });
+			this.currentLevel.load();
 
-			that.levelDescriptorCreated = new Date();
-			that.levelDescriptor = that.getLevelDescriptorLabel();
-			that.addChild(that.levelDescriptor);
+			this.levelDescriptorCreated = new Date();
+			this.levelDescriptor = this.getLevelDescriptorLabel();
+			this.addChild(this.levelDescriptor);
 		}
 
 		onMissileLaunched(x, y) {
-			let that = this;
-
-			that.addChild(new Missile({ x, y: y - 15, angle: 270, owner: that.player }));
+			this.addChild(new Missile({ x, y: y - 15, angle: 270, owner: this.player }));
 		}
 
 		onMissileOutOfScreen(missile) {
-			let that = this;
-
-			that.removeChild(missile);
+			this.removeChild(missile);
 		}
 
 		onFighterOutOfScreen(fighter) {
-			let that = this;
-
-			that.removeChild(fighter);
+			this.removeChild(fighter);
 		}
 
 		onKamikazeOutOfScreen(kamikaze) {
-			let that = this;
-
-			that.removeChild(kamikaze);
+			this.removeChild(kamikaze);
 		}
 
 		onPowerUpOutOfScreen(powerUp) {
-			let that = this;
-
-			that.removeChild(powerUp);
+			this.removeChild(powerUp);
 		}
 
 		onTurretOutOfScreen(turret) {
-			let that = this;
-
-			that.removeChild(turret);
+			this.removeChild(turret);
 		}
 
 		runPlayerDamageEffect() {
-			let that = this;
-
-			that.addChild(new PlayerDamageEffect());
+			this.addChild(new PlayerDamageEffect());
 		}
 
 		onPlayerBombEffectDone(effect) {
-			let that = this;
-
-			that.removeChild(effect);
+			this.removeChild(effect);
 		}
 
 		runPlayerBombEffect() {
-			let that = this;
-
-			that.addChild(new PlayerBombEffect());
+			this.addChild(new PlayerBombEffect());
 		}
 
 		onPlayerDamageEffectDone(effect) {
-			let that = this;
-
-			that.removeChild(effect);
+			this.removeChild(effect);
 		}
 
 		onBombDropped() {
-			let that = this,
-				sprites = that.sprites.filter(sprite => sprite.__type === consts.SpriteType.Turret),
+			let sprites = this.sprites.filter(sprite => sprite.__type === consts.SpriteType.Turret),
 				exposionArea = {
-					x: that.player.x + that.player.width / 2,
-					y: that.player.y + that.player.height / 2,
+					x: this.player.x + this.player.width / 2,
+					y: this.player.y + this.player.height / 2,
 					radius: BOMB_RADIUS
 				};
 
-			that.runPlayerBombEffect();
-			that.addChild(new BombExplosion({
-				x: that.player.x + that.player.width - that.player.width / 2,
-				y: that.player.y + that.player.height - that.player.height / 2}));
+			this.runPlayerBombEffect();
+			this.addChild(new BombExplosion({
+				x: this.player.x + this.player.width - this.player.width / 2,
+				y: this.player.y + this.player.height - this.player.height / 2}));
 
 			sprites.forEach(sprite => {
 				let spriteRect = { x: sprite.x, y: sprite.y, width: sprite.width, height: sprite.height };
@@ -220,8 +185,7 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		isLevelCompleted() {
 			return false;
 
-			let that = this,
-				sprites = that.sprites.find((sprite) => sprite.__type === consts.SpriteType.Invader ||
+			let sprites = this.sprites.find((sprite) => sprite.__type === consts.SpriteType.Invader ||
 															sprite.__type === consts.SpriteType.DoubleWeaponInvader ||
 															sprite.__type === consts.SpriteType.Missile ||
 															sprite.__type === consts.SpriteType.Explosion);
@@ -236,21 +200,20 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		checkGameOver() {
 			return false;
 
-			let that = this,
-				sprites = that.sprites.find(sprite => sprite.__type === consts.SpriteType.Explosion ||
-													sprite.__type === consts.SpriteType.Player ||
-													sprite.__type === consts.SpriteType.Missile);
+			let sprites = this.sprites.find(sprite => sprite.__type === consts.SpriteType.Explosion ||
+					sprite.__type === consts.SpriteType.Player ||
+					sprite.__type === consts.SpriteType.Missile);
 
 			if (!sprites) {
 				return true;
 			}
 
-			sprites = that.sprites.find((sprite) => sprite.__type === consts.SpriteType.Invader ||
+			sprites = this.sprites.find((sprite) => sprite.__type === consts.SpriteType.Invader ||
 														sprite.__type === consts.SpriteType.DoubleWeaponInvader ||
 														sprite.__type === consts.SpriteType.Missile ||
 														sprite.__type === consts.SpriteType.Explosion);
 
-			if (!sprites && that.level === MAX_LEVEL) {
+			if (!sprites && this.level === MAX_LEVEL) {
 				return true;
 			}
 
@@ -258,16 +221,12 @@ define(["framework/game", "sprites/splash-screen", "framework/label", "sprites/s
 		}
 
 		updateScores(invader) {
-			let that = this;
-
-			that.scores += that.level * invader.scoreBonus;
+			this.scores += this.level * invader.scoreBonus;
 		}
 
 		removePlayer(sprite) {
-			let that = this;
-
-			that.removeChild(sprite);
-			that.player = null;
+			this.removeChild(sprite);
+			this.player = null;
 		}
 	}
 

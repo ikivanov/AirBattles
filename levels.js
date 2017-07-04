@@ -4,26 +4,16 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 
 	class BaseLevel {
 		constructor(config) {
-			let that = this;
+			this.game = config.game;
 
-			that.game = config.game;
-
-			that.name = config.name || "";
-			that.initialPlayerX = 275;
-			that.initialPlayerY = that.game.height - Player.Height - 5;
+			this.name = config.name || "";
+			this.initialPlayerX = 275;
+			this.initialPlayerY = this.game.height - Player.Height - 5;
 		}
 
 		load() {
-			let that = this;
-
-			that.createBackground();
-			that.createPlayer();
-
-			// ground units
-			// that.createBunkers(); -> circle with B inside
-			// that.createBTRs(); -> rectangle with BTR inside
-			// that.createMissileUnits(); -> rectangle with M inside
-			// that.createRPGUnits(); -> circle with RPG inside
+			this.createBackground();
+			this.createPlayer();
 		}
 
 		loadMore() {
@@ -33,11 +23,10 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 		}
 
 		createPlayer() {
-			let that = this,
-				player = new Player({ x: that.initialPlayerX, y: that.initialPlayerY });
+			let player = new Player({ x: this.initialPlayerX, y: this.initialPlayerY });
 
-			that.game.addChild(player);
-			that.game.player = player;
+			this.game.addChild(player);
+			this.game.player = player;
 		}
 	}
 
@@ -72,81 +61,74 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 		}
 
 		createBackground() {
-			let that = this;
-
-			that.background = new Background({
+			this.background = new Background({
 				intialX: 0,
 				intialY: 5354,
 				velocityY: -25,
 				imageFilename: "images/level1-background.jpg"
 			});
 
-			that.game.addChild(that.background);
+			this.game.addChild(this.background);
 		}
 
 		loadMore() {
-			let that = this;
-
-			that.launchFighter();
-			that.launchKamikaze();
-			that.launchKamikaze2();
-			that.dropPowerUp();
-			that.createTurrets();
+			this.launchFighter();
+			this.launchKamikaze();
+			this.launchKamikaze2();
+			this.dropPowerUp();
+			this.createTurrets();
 		}
 
 
 		launchFighter() {
-			let that = this,
-				player = that.game.player,
+			let player = this.game.player,
 				now = Date.now();
 
-			if (now - that.lastFighterLaunched > that.intervalBetweenFighterLaunches) {
-				that.game.addChild(new Fighter({
-					x: Utils.randomRange(0, that.game.width - Fighter.Width),
+			if (now - this.lastFighterLaunched > this.intervalBetweenFighterLaunches) {
+				this.game.addChild(new Fighter({
+					x: Utils.randomRange(0, this.game.width - Fighter.Width),
 					y: -Fighter.Height
 				}));
 
-				that.lastFighterLaunched = now;
-				that.intervalBetweenFighterLaunches = Utils.randomRange(that.fighterLauchesMinIntervalValue, that.fighterLauchesMaxIntervalValue);
-				if (that.fighterLauchesMinIntervalValue > 100) {
-					//that.fighterLauchesMinIntervalValue--;
+				this.lastFighterLaunched = now;
+				this.intervalBetweenFighterLaunches = Utils.randomRange(this.fighterLauchesMinIntervalValue, this.fighterLauchesMaxIntervalValue);
+				if (this.fighterLauchesMinIntervalValue > 100) {
+					//this.fighterLauchesMinIntervalValue--;
 				}
 
-				if (that.fighterLauchesMaxIntervalValue > 500) {
-					//that.fighterLauchesMaxIntervalValue -= 5;
+				if (this.fighterLauchesMaxIntervalValue > 500) {
+					//this.fighterLauchesMaxIntervalValue -= 5;
 				}
 			}
 		}
 
 		launchKamikaze() {
-			let that = this,
-				player = that.game.player,
+			let player = this.game.player,
 				now = Date.now();
 
-			if (now - that.lastKamikaze2Launched > that.intervalBetweenKamikaze2Launches) {
-				that.game.addChild(new Kamikaze({
+			if (now - this.lastKamikaze2Launched > this.intervalBetweenKamikaze2Launches) {
+				this.game.addChild(new Kamikaze({
 					x: player.x,
 					y: -Kamikaze.Height
 				}));
 
-				that.lastKamikaze2Launched = now;
-				that.intervalBetweenKamikaze2Launches = Utils.randomRange(5000, 7500);
+				this.lastKamikaze2Launched = now;
+				this.intervalBetweenKamikaze2Launches = Utils.randomRange(5000, 7500);
 			}
 		}
 
 		launchKamikaze2() {
-			let that = this,
-				player = that.game.player,
+			let player = this.game.player,
 				now = Date.now();
 
-			if (now - that.lastKamikazeLaunched > that.intervalBetweenKamikazeLaunches) {
-				that.game.addChild(new Kamikaze2({
-					x: Utils.randomRange(0, that.game.width - Kamikaze2.Width),
+			if (now - this.lastKamikazeLaunched > this.intervalBetweenKamikazeLaunches) {
+				this.game.addChild(new Kamikaze2({
+					x: Utils.randomRange(0, this.game.width - Kamikaze2.Width),
 					y: -Kamikaze2.Height
 				}));
 
-				that.lastKamikazeLaunched = now;
-				that.intervalBetweenKamikazeLaunches = Utils.randomRange(3500, 5000);
+				this.lastKamikazeLaunched = now;
+				this.intervalBetweenKamikazeLaunches = Utils.randomRange(3500, 5000);
 			}
 		}
 
@@ -155,15 +137,14 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 				return;
 			}
 
-			let that = this,
-				now = Date.now();
+			let now = Date.now();
 
-			if (now - that.levelStart > 60000) {
-				that.game.addChild(new PowerUp2xBasic({
-					x: Utils.randomRange(0, that.game.width - PowerUp2xBasic.Width),
+			if (now - this.levelStart > 60000) {
+				this.game.addChild(new PowerUp2xBasic({
+					x: Utils.randomRange(0, this.game.width - PowerUp2xBasic.Width),
 					y: -PowerUp2xBasic.Height
 				}));
-				that.powerUpDroped = true;
+				this.powerUpDroped = true;
 			}
 		}
 
@@ -194,9 +175,7 @@ define(["framework/utils", "sprites/background", "sprites/player", "sprites/figh
 		}
 
 		createBackground() {
-			let that = this;
-
-			that.game.addChild(new Background({
+			this.game.addChild(new Background({
 				intialX: 0,
 				intialY: 5743,
 				velocityY: -25,

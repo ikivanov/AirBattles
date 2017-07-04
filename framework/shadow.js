@@ -10,16 +10,14 @@ define(["framework/sprite", "../consts"], function(Sprite, consts) {
 
 			super(config);
 
-			let that = this;
+			this.zIndex = 19;
 
-			that.zIndex = 19;
+			this.offsetX = config.offsetX;
+			this.offsetY = config.offsetY;
+			this.owner = config.owner;
 
-			that.offsetX = config.offsetX;
-			that.offsetY = config.offsetY;
-			that.owner = config.owner;
-
-			that.isNonPlayable = true;
-			that.__type = consts.SpriteType.Shadow;
+			this.isNonPlayable = true;
+			this.__type = consts.SpriteType.Shadow;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
@@ -27,15 +25,14 @@ define(["framework/sprite", "../consts"], function(Sprite, consts) {
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context,
-				angle = that.owner.angle;
+			let ctx = this.context,
+				angle = this.owner.angle;
 
 			ctx.save();
 			ctx.globalAlpha = 0.3;
-			ctx.translate(that.x, that.y);
-			let half_width = that.image.width / 2,
-				half_height = that.image.height / 2;
+			ctx.translate(this.x, this.y);
+			let half_width = this.image.width / 2,
+				half_height = this.image.height / 2;
 
 			if (angle !== 0) {
 				ctx.rotate((angle * Math.PI) / 180);
@@ -43,7 +40,7 @@ define(["framework/sprite", "../consts"], function(Sprite, consts) {
 
 			ctx.scale(0.55, 0.55);
 
-			ctx.drawImage(that.image, 0, 0);
+			ctx.drawImage(this.image, 0, 0);
 			ctx.restore();
 		}
 	}

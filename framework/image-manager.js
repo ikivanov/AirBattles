@@ -3,22 +3,19 @@ define([""], function() {
 
 	class ImageManager {
 		constructor() {
-			let that = this;
-
-			that.cachedImages = {};
+			this.cachedImages = {};
 		}
 
 		loadImage(url) {
-			let that = this,
-				promise = new Promise(function(resolve, reject) {
-					let image = that.cachedImages[url];
+			let promise = new Promise((resolve, reject) => {
+					let image = this.cachedImages[url];
 
 					if (image) {
 						resolve(image);
 					} else {
 						image = new Image();
-						image.onload = function() {
-							that.cachedImages[url] = image;
+						image.onload = _ => {
+							this.cachedImages[url] = image;
 							resolve(image);
 						}
 						image.onerror = function(err) {
@@ -32,24 +29,21 @@ define([""], function() {
 		}
 
 		loadImages(imagesToLoad) {
-			let that = this,
-				promises = [];
+			let promises = [];
 
 			if (!imagesToLoad || imagesToLoad.length === 0) {
 				return Promise.reject({ reason: NO_IMAGE_LIST_PROVIDED_MSG });
 			}
 
 			for (let i = 0; i < imagesToLoad.length; i++) {
-				promises.push(that.loadImage(imagesToLoad[i]));
+				promises.push(this.loadImage(imagesToLoad[i]));
 			}
 
 			return Promise.all(promises);
 		}
 
 		getImage(url) {
-			let that = this;
-
-			return that.cachedImages[url];
+			return this.cachedImages[url];
 		}
 	}
 

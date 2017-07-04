@@ -29,58 +29,52 @@ define(["../framework/sprite", "../consts", "../sprites/explosion", "../framewor
 
 			super(config);
 
-			let that = this;
-			that.initialX = that.x;
-			that.velocityX = SPEED_X;
-			that.velocityY = SPEED_Y;
-			that.angle = 180;
-			that.scoreBonus = 10;
-			that.lives = config.lives !== undefined ? config.lives : 1;
+			this.initialX = this.x;
+			this.velocityX = SPEED_X;
+			this.velocityY = SPEED_Y;
+			this.angle = 180;
+			this.scoreBonus = 10;
+			this.lives = config.lives !== undefined ? config.lives : 1;
 
-			that.zIndex = 20;
-			that.__type = consts.SpriteType.Kamikaze;
+			this.zIndex = 20;
+			this.__type = consts.SpriteType.Kamikaze;
 
-			that.shadow = new Shadow({
-				x: that.x + SHADOW_OFFSET_X,
-				y: that.y + SHADOW_OFFSET_Y,
+			this.shadow = new Shadow({
+				x: this.x + SHADOW_OFFSET_X,
+				y: this.y + SHADOW_OFFSET_Y,
 				offsetX: SHADOW_OFFSET_X,
 				offsetY: SHADOW_OFFSET_Y,
 				imageFilename: SHADOW_IMAGE_FILENAME,
 				zIndex: SHADOW_ZINDEX,
-				owner: that
+				owner: this
 			});
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
 			super.update(lastFrameEllapsedTime, keyboard);
 
-			if (that.y > that.game.height) {
-				that.game.onKamikazeOutOfScreen(that);
+			if (this.y > this.game.height) {
+				this.game.onKamikazeOutOfScreen(this);
 			}
 		}
 
 		onCollidedWith(sprite) {
-			let that = this,
-				type = sprite.__type;
+			let type = sprite.__type;
 
 			if (type === consts.SpriteType.Missile || type === consts.SpriteType.Player) {
-				that.lives--;
+				this.lives--;
 
-				if (that.lives === 0) {
-					that.destroy();
+				if (this.lives === 0) {
+					this.destroy();
 				}
 			}
 		}
 
 		destroy() {
-			let that = this;
+			this.game.updateScores(this);
+			this.game.removeChild(this);
 
-			that.game.updateScores(that);
-			that.game.removeChild(that);
-
-			that.game.addChild(new Explosion({ x: that.x, y: that.y }));
+			this.game.addChild(new Explosion({ x: this.x, y: this.y }));
 		}
 	}
 

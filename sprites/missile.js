@@ -11,32 +11,28 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 
 			super(config);
 
-			let that = this;
+			this.owner = config.owner || "";
+			this.type = config.type;
+			this.color = config.color || "yellow";
+			this.velocityX = config.velocityX !== undefined ? config.velocityX : VELOCITY_X;
+			this.velocityY = config.velocityY !== undefined ? config.velocityY : VELOCITY_Y;
+			this.angle = config.angle !== undefined ? config.angle : 0;
 
-			that.owner = config.owner || "";
-			that.type = config.type;
-			that.color = config.color || "yellow";
-			that.velocityX = config.velocityX !== undefined ? config.velocityX : VELOCITY_X;
-			that.velocityY = config.velocityY !== undefined ? config.velocityY : VELOCITY_Y;
-			that.angle = config.angle !== undefined ? config.angle : 0;
-
-			if (that.type === "allied") {
-				that.velocityY *= -1;
+			if (this.type === "allied") {
+				this.velocityY *= -1;
 			}
 
-			that.zIndex = 25;
-			that.__type = consts.SpriteType.Missile;
+			this.zIndex = 25;
+			this.__type = consts.SpriteType.Missile;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this;
+			this.x += this.velocityX * lastFrameEllapsedTime * Math.cos((this.angle) * Math.PI / 180);
+			this.y += this.velocityY * lastFrameEllapsedTime * Math.sin((this.angle) * Math.PI / 180);
 
-			that.x += that.velocityX * lastFrameEllapsedTime * Math.cos((that.angle) * Math.PI / 180);
-			that.y += that.velocityY * lastFrameEllapsedTime * Math.sin((that.angle) * Math.PI / 180);
-
-			if (that.x <= 0 || that.x + that.width >= that.game.width ||
-				that.y <= 0 || that.y > that.game.height) {
-				that.game.onMissileOutOfScreen(that);
+			if (this.x <= 0 || this.x + this.width >= this.game.width ||
+				this.y <= 0 || this.y > this.game.height) {
+				this.game.onMissileOutOfScreen(this);
 			}
 		}
 
@@ -52,32 +48,27 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context;
+			let ctx = this.context;
 
 			ctx.save();
-			ctx.translate(that.x, that.y);
-			ctx.rotate(that._getRotationAngle(that.angle) * Math.PI / 180);
-			ctx.fillStyle = that.color;
-			ctx.fillRect(0, 0, that.width, that.height);
+			ctx.translate(this.x, this.y);
+			ctx.rotate(this._getRotationAngle(this.angle) * Math.PI / 180);
+			ctx.fillStyle = this.color;
+			ctx.fillRect(0, 0, this.width, this.height);
 			ctx.restore();
 		}
 
 		onCollidedWith(sprite) {
-			let that = this;
-
 			//todo: introduce Ground sprites => if sprites is ground...
 			if (sprite.__type === consts.SpriteType.Turret) {
 				return;
 			}
 
-			that.destroy();
+			this.destroy();
 		}
 
 		destroy() {
-			let that = this;
-
-			that.game.removeChild(that);
+			this.game.removeChild(this);
 		}
 	}
 

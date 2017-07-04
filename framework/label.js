@@ -3,34 +3,31 @@ define(["framework/sprite"], function(Sprite) {
 		constructor(config) {
 			super(config);
 
-			let that = this;
-
-			that.isNonPlayable = true;
-			that.text = config.text || "";
-			that.color = config.color;
-			that.size = config.size;
-			that.backgroundColor = config.backgroundColor;
-			that.fontFamily = config.fontFamily || "Arial";
-			that.zIndex = config.zIndex !== undefined ? config.zIndex : 0;
-			that.__type = "Label";
+			this.isNonPlayable = true;
+			this.text = config.text || "";
+			this.color = config.color;
+			this.size = config.size;
+			this.backgroundColor = config.backgroundColor;
+			this.fontFamily = config.fontFamily || "Arial";
+			this.zIndex = config.zIndex !== undefined ? config.zIndex : 0;
+			this.__type = "Label";
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context,
-				textX = that.x,
-				textY = that.y;
+			let ctx = this.context,
+				textX = this.x,
+				textY = this.y;
 
-			if (that.width && that.height) {
-				textX = (that.width - ctx.measureText(that.text).width) / 2;
-				textY = (that.height - that.size) / 2;
-				ctx.fillStyle = that.backgroundColor;
-				ctx.fillRect(that.x, that.y, that.width, that.height);
+			if (this.width && this.height) {
+				textX = (this.width - ctx.measureText(this.text).width) / 2;
+				textY = (this.height - this.size) / 2;
+				ctx.fillStyle = this.backgroundColor;
+				ctx.fillRect(this.x, this.y, this.width, this.height);
 			}
 
-			ctx.font = `${that.size}px ${that.fontFamily}`;
-			ctx.fillStyle = that.color;
-			ctx.fillText(that.text, textX, textY);
+			ctx.font = `${this.size}px ${this.fontFamily}`;
+			ctx.fillStyle = this.color;
+			ctx.fillText(this.text, textX, textY);
 		}
 	}
 

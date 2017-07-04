@@ -26,36 +26,34 @@ define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/
 
 			super(config);
 
-			let that = this;
-			that.initialX = that.x;
-			that.velocityX = SPEED_X;
-			that.velocityY = SPEED_Y;
-			that.scoreBonus = 10;
-			that.lives = config.lives !== undefined ? config.lives : 1;
+			this.initialX = this.x;
+			this.velocityX = SPEED_X;
+			this.velocityY = SPEED_Y;
+			this.scoreBonus = 10;
+			this.lives = config.lives !== undefined ? config.lives : 1;
 
-			that.fireInterval = config.fireInterval !== undefined ? config.fireInterval : utils.randomRange(2500, 5000);
-			that.lastFireTime = Date.now();
+			this.fireInterval = config.fireInterval !== undefined ? config.fireInterval : utils.randomRange(2500, 5000);
+			this.lastFireTime = Date.now();
 
-			that.zIndex = 2;
-			that.__type = consts.SpriteType.Turret;
+			this.zIndex = 2;
+			this.__type = consts.SpriteType.Turret;
 		}
 
 		_calculateAngle() {
-			let that = this,
-				player = that.game.player,
-				oppositeCateteLength = Math.abs(player.x - that.x),
-				adjecentCateteLength = Math.abs(player.y - that.y),
+			let player = this.game.player,
+				oppositeCateteLength = Math.abs(player.x - this.x),
+				adjecentCateteLength = Math.abs(player.y - this.y),
 				hypotenuseLength = Math.sqrt(oppositeCateteLength * oppositeCateteLength + adjecentCateteLength * adjecentCateteLength),
 				sin = oppositeCateteLength / hypotenuseLength,
 				angle = Math.asin(sin) * 180 / Math.PI;
 
 			//angle in [0..90] -> [0..360]
-			if (player.x < that.x && player.y < that.y) {
+			if (player.x < this.x && player.y < this.y) {
 				angle = 180 - angle;
 			}
 
-			if (player.x > that.x) {
-				if (player.y < that.y) {
+			if (player.x > this.x) {
+				if (player.y < this.y) {
 					angle += 180;
 				} else {
 					angle = 360 - angle;
@@ -66,50 +64,45 @@ define(["../framework/sprite", "../sprites/missile", "../consts", "../framework/
 		}
 
 		update (lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
-			if (that.y > that.game.height) {
-				that.game.onTurretOutOfScreen(that);
+			if (this.y > this.game.height) {
+				this.game.onTurretOutOfScreen(this);
 			}
 
 			super.update(lastFrameEllapsedTime, keyboard);
 
-			if (that.isDestoyed) {
+			if (this.isDestoyed) {
 				return;
 			}
 
-			that.angle = that._calculateAngle();
+			this.angle = this._calculateAngle();
 
-			that.attack();
+			this.attack();
 		}
 
 		attack() {
-			let that = this,
-				now = Date.now(),
+			let now = Date.now(),
 				x = this.x + (25 * Math.cos((this.angle + 90) * Math.PI / 180)),
 				y = this.y + (25 * Math.sin((this.angle + 90) * Math.PI / 180));
 
-			if (now - that.lastFireTime > that.fireInterval) {
-				that.game.addChild(new Missile({
+			if (now - this.lastFireTime > this.fireInterval) {
+				this.game.addChild(new Missile({
 					x,
 					y,
-					owner: that,
-					angle: that.angle + 90,
+					owner: this,
+					angle: this.angle + 90,
 					velocityX: 250,
 					velocityY: 250
 				}));
-				that.lastFireTime = now;
+				this.lastFireTime = now;
 			}
 		}
 
 		destroy() {
-			let that = this;
+			this.isDestoyed = true;
 
-			that.isDestoyed = true;
+			this.game.updateScores(this);
 
-			that.game.updateScores(that);
-
-			that.image = ImageManager.getImage(IMAGE_FILENAME_DESTROYED);
+			this.image = ImageManager.getImage(IMAGE_FILENAME_DESTROYED);
 		}
 	}
 

@@ -11,8 +11,6 @@ define(["../framework/image-manager", "../framework/sprite"], function(ImageMana
 				isNonPlayable: true
 			});
 
-			let that = this;
-
 			this.logo = ImageManager.getImage(LOGO_FILENAME);
 
 			this.continueTextVisible = true;
@@ -22,31 +20,29 @@ define(["../framework/image-manager", "../framework/sprite"], function(ImageMana
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this,
-				now = Date.now(),
-				interval = that.continueTextVisible ? 900 : 750;
+			let now = Date.now(),
+				interval = this.continueTextVisible ? 900 : 750;
 
-			if (now - that.lastTime > interval) {
-				that.continueTextVisible = !that.continueTextVisible;
-				that.lastTime = Date.now();
+			if (now - this.lastTime > interval) {
+				this.continueTextVisible = !this.continueTextVisible;
+				this.lastTime = Date.now();
 			}
 
 
 			if (keyboard.keys.Space) {
-				that.game.onSplashScreenNeedsRemoval(that);
+				this.game.onSplashScreenNeedsRemoval(this);
 			}
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context;
+			let ctx = this.context;
 
 			super.render();
 
 			//TODO: Replace with background image
 			ctx.fillStyle = "black";
 			ctx.fillRect(0, 0, 600, 600);
-			ctx.drawImage(that.logo, 200, 200);
+			ctx.drawImage(this.logo, 200, 200);
 
 			ctx.font = "32px Arial";
 			ctx.fillStyle = "red";
@@ -59,7 +55,7 @@ define(["../framework/image-manager", "../framework/sprite"], function(ImageMana
 			ctx.restore();
 
 			ctx.fillStyle = "red";
-			if (that.continueTextVisible) {
+			if (this.continueTextVisible) {
 				ctx.fillStyle = "yellow";
 				ctx.font = "16px Arial";
 				ctx.fillText("Press Space to continue...", 225, 575);

@@ -8,39 +8,35 @@ define(["../framework/sprite", "../consts"], function(Sprite, consts) {
 			config.imageFilename = IMAGE_FILENAME;
 			super(config);
 
-			let that = this;
-			that.animationFrameSpeed = 32;
-			that.frameIndex = 0;
-			that.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-			that.repeatAnimation = false;
-			that.isCompleted = false;
+			this.animationFrameSpeed = 32;
+			this.frameIndex = 0;
+			this.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+			this.repeatAnimation = false;
+			this.isCompleted = false;
 
-			that.zIndex = 20;
-			that.__type = consts.SpriteType.BombExplosion;
+			this.zIndex = 20;
+			this.__type = consts.SpriteType.BombExplosion;
 		}
 
 		update(lastFrameEllapsedTime, keyboard) {
-			let that = this;
-
-			that.frameIndex += that.animationFrameSpeed * lastFrameEllapsedTime;
+			this.frameIndex += this.animationFrameSpeed * lastFrameEllapsedTime;
 		}
 
 		render() {
-			let that = this,
-				ctx = that.context,
-				max = that.frames.length,
-				idx = Math.floor(that.frameIndex),
-				frame = that.frames[idx % max],
+			let ctx = this.context,
+				max = this.frames.length,
+				idx = Math.floor(this.frameIndex),
+				frame = this.frames[idx % max],
 				imageOffsetX = frame * WIDTH,
 				imageOffsetY = 0;
 
-			if(!that.repeatAnimation && idx >= max) {
-				that.isCompleted = true;
+			if(!this.repeatAnimation && idx >= max) {
+				this.isCompleted = true;
 				return;
 			}
 
-			if (that.image) {
-				ctx.drawImage(that.image, imageOffsetX, imageOffsetY, WIDTH, HEIGHT, that.x, that.y, WIDTH, HEIGHT);
+			if (this.image) {
+				ctx.drawImage(this.image, imageOffsetX, imageOffsetY, WIDTH, HEIGHT, this.x, this.y, WIDTH, HEIGHT);
 			}
 		}
 	}
